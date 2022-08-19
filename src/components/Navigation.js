@@ -46,7 +46,10 @@ function Navigation() {
                   <Nav.Link>
                     <Link to="/forum">Forum</Link>
                   </Nav.Link>
-                  <NavDropdown
+                  <Nav.Link>
+                    <Link to="/semesters">Semesters</Link>
+                  </Nav.Link>
+                  {/* <NavDropdown
                     title="Semesters"
                     id={`offcanvasNavbarDropdown-expand-${expand}`}
                   >
@@ -74,7 +77,7 @@ function Navigation() {
                     <NavDropdown.Item>
                       <Link to="/semesters">Semester 8</Link>
                     </NavDropdown.Item>
-                  </NavDropdown>
+                  </NavDropdown> */}
                 </Nav>
               </Offcanvas.Body>
             </Navbar.Offcanvas>

@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Alert, Button } from "react-bootstrap";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Navigation from "./Navigation";
+import { db, storage } from "../firebase";
+import { ref, listAll, getDownloadURL } from "firebase/storage";
+import { getDoc, doc } from "firebase/firestore";
 
 export default function Profile() {
   const [error, setError] = useState("");
+  const [profilePicture, setProfilePicture] = useState({});
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -24,15 +28,34 @@ export default function Profile() {
     }
   }
 
+  useEffect(() => {
+    const getPP = async () => {
+      const pp = await getDoc(doc(db, "users", `${currentUser.email}`));
+      console.log(pp);
+      console.log(pp.data());
+      setProfilePicture(pp.data());
+      console.log(profilePicture.ppurl);
+    };
+
+    getPP();
+  }, []);
+
   return (
     <>
       <Navigation />
       {currentUser.email === profile ? (
         <>
-          <Card style={{ maxWidth: "400px" }}>
+          <Card className="profile_card">
             <Card.Body>
               <h2 className="text-center mb-4">Profile</h2>
               {error && <Alert variant="danger">{error}</Alert>}
+
+              <div className="center">
+                <img
+                  className="profile_avatar"
+                  src={profilePicture.ppurl}
+                ></img>
+              </div>
 
               <strong>Email: </strong>
               {currentUser.email}
@@ -41,7 +64,7 @@ export default function Profile() {
               </Link>
             </Card.Body>
           </Card>
-          <div className="w-100 text-center mt-2" style={{ maxWidth: "400px" }}>
+          <div className="profile_logout">
             <Button variant="link" onClick={handleLogout}>
               Log Out
             </Button>

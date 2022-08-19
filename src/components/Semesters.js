@@ -52,7 +52,7 @@ export default function Semesters() {
                     }}
                   >
                     <Link
-                      to="/semesters/semester"
+                      to="/semesters/semester1"
                       state={{
                         semester: 1,
                       }}
@@ -69,7 +69,7 @@ export default function Semesters() {
                     }}
                   >
                     <Link
-                      to="/semesters/semester"
+                      to="/semesters/semester2"
                       state={{
                         semester: 2,
                       }}
@@ -86,7 +86,7 @@ export default function Semesters() {
                     }}
                   >
                     <Link
-                      to="/semesters/semester"
+                      to="/semesters/semester3"
                       state={{
                         semester: 3,
                       }}
@@ -103,7 +103,7 @@ export default function Semesters() {
                     }}
                   >
                     <Link
-                      to="/semesters/semester"
+                      to="/semesters/semester4"
                       state={{
                         semester: 4,
                       }}
@@ -120,7 +120,7 @@ export default function Semesters() {
                     }}
                   >
                     <Link
-                      to="/semesters/semester"
+                      to="/semesters/semester5"
                       state={{
                         semester: 5,
                       }}
@@ -137,7 +137,7 @@ export default function Semesters() {
                     }}
                   >
                     <Link
-                      to="/semesters/semester"
+                      to="/semesters/semester6"
                       state={{
                         semester: 6,
                       }}
@@ -154,7 +154,7 @@ export default function Semesters() {
                     }}
                   >
                     <Link
-                      to="/semesters/semester"
+                      to="/semesters/semester7"
                       state={{
                         semester: 7,
                       }}
@@ -171,7 +171,7 @@ export default function Semesters() {
                     }}
                   >
                     <Link
-                      to="/semesters/semester"
+                      to="/semesters/semester8"
                       state={{
                         semester: 8,
                       }}

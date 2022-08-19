@@ -15,14 +15,17 @@ import Semesters from "./Semesters";
 import Semester from "./Semester";
 import SubjectPage from "./SubjectPage";
 import Chat from "./Chat";
+import "../styles/styles.css";
 
 function App() {
   return (
     <Container
-      className="d-flex align-items-center justify-content-center"
-      style={{ minHeight: "100vh" }}
+    // className="d-flex align-items-center justify-content-center"
+    // style={{ minHeight: "100vh" }}
     >
-      <div className="w-100">
+      <div
+      //className="w-100"
+      >
         <Router>
           <AuthProvider>
             <Routes>
@@ -78,7 +81,63 @@ function App() {
                 }
               />
               <Route
-                path="/semesters/semester"
+                path="/semesters/semester1"
+                element={
+                  <PrivateRoute>
+                    <Semester />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/semesters/semester2"
+                element={
+                  <PrivateRoute>
+                    <Semester />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/semesters/semester3"
+                element={
+                  <PrivateRoute>
+                    <Semester />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/semesters/semester4"
+                element={
+                  <PrivateRoute>
+                    <Semester />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/semesters/semester5"
+                element={
+                  <PrivateRoute>
+                    <Semester />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/semesters/semester6"
+                element={
+                  <PrivateRoute>
+                    <Semester />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/semesters/semester7"
+                element={
+                  <PrivateRoute>
+                    <Semester />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/semesters/semester8"
                 element={
                   <PrivateRoute>
                     <Semester />
@@ -87,7 +146,63 @@ function App() {
               />
 
               <Route
-                path="/semesters/semester/subject"
+                path={"/semesters/semester1/subject"}
+                element={
+                  <PrivateRoute>
+                    <SubjectPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path={"/semesters/semester2/subject"}
+                element={
+                  <PrivateRoute>
+                    <SubjectPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path={"/semesters/semester3/subject"}
+                element={
+                  <PrivateRoute>
+                    <SubjectPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path={"/semesters/semester4/subject"}
+                element={
+                  <PrivateRoute>
+                    <SubjectPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path={"/semesters/semester5/subject"}
+                element={
+                  <PrivateRoute>
+                    <SubjectPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path={"/semesters/semester6/subject"}
+                element={
+                  <PrivateRoute>
+                    <SubjectPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path={"/semesters/semester7/subject"}
+                element={
+                  <PrivateRoute>
+                    <SubjectPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path={"/semesters/semester8/subject"}
                 element={
                   <PrivateRoute>
                     <SubjectPage />

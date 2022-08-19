@@ -1,93 +1,141 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Navigation from "./Navigation";
 import Message from "./Message";
 import Form from "react-bootstrap/Form";
 import { Button } from "react-bootstrap";
-import { getDocs, doc, addDoc, collection, setDoc } from "firebase/firestore";
+import {
+  getDoc,
+  doc,
+  addDoc,
+  collection,
+  setDoc,
+  query,
+  orderBy,
+  limit,
+  serverTimestamp,
+  onSnapshot,
+  QuerySnapshot,
+} from "firebase/firestore";
 import { db } from "../firebase";
+import { useAuth } from "../contexts/AuthContext";
+import { TextField } from "@mui/material";
 
 function Chat() {
   const location = useLocation();
   const { sender, recipient } = location.state;
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [orderedMsgs, setOrderedMsgs] = useState([]);
+  const scroll = useRef();
 
-  const messagesCollectionRef = collection(db, "messages");
+  const { currentUser } = useAuth();
+
+  const id =
+    sender > recipient ? `${sender + recipient}` : `${recipient + sender}`;
+
+  const messagesCollectionRef = collection(db, "messages", id, "chat");
+
+  const getMess = () => {
+    const q = query(
+      messagesCollectionRef,
+      orderBy("createdAt", "asc"),
+      limit(10)
+    );
+
+    onSnapshot(q, (QuerySnapshot) => {
+      let msgs = [];
+      QuerySnapshot.forEach((doc) => {
+        msgs.push(doc.data());
+      });
+      setOrderedMsgs(msgs);
+    });
+  };
+
+  const [profilePicture, setProfilePicture] = useState({});
 
   useEffect(() => {
-    const getMessages = async () => {
-      const data = await getDocs(messagesCollectionRef);
-      //console.log(data.docs);
-      setMessages(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      console.log(messages);
+    getMess();
+
+    const getPP = async () => {
+      const pp = await getDoc(doc(db, "users", `${recipient}`));
+      console.log(pp);
+      console.log(pp.data());
+      setProfilePicture(pp.data());
+      console.log(profilePicture.ppurl);
     };
 
-    getMessages();
-    //
+    getPP();
   }, []);
 
-  const createMessage = async () => {
-    // await addDoc(messagesCollectionRef, {
-    //   message: message,
-    //   recipient: recipient,
-    //   sender: sender,
-    // });
+  const handleSend = async (e) => {
+    e.preventDefault();
 
-    await setDoc(doc(db, "messages"), {
+    await addDoc(messagesCollectionRef, {
       message: message,
       recipient: recipient,
       sender: sender,
+      createdAt: serverTimestamp(),
     });
-
     setMessage("");
+    scroll.current.scrollIntoView({ behavoir: "smooth" });
   };
 
-  const handleSend = (e) => {
-    e.preventDefault();
-    createMessage();
-  };
   return (
     <div
       style={{
-        minHeight: "100vh",
+        height: "100vh",
         backgroundColor: "gray",
         width: "55vw",
         position: "relative",
         marginLeft: "auto",
         marginRight: "auto",
         paddingBottom: "10vh",
+        overflowY: "scroll",
       }}
     >
       <Navigation />
-      <div>Message</div>
-      <div>From: {sender}</div>
-      <div>To: {recipient}</div>
-      {/* <Message /> */}
+
       <div>
-        {messages &&
-          messages.map((m) => {
-            return <Message key={m.id} message={m.message} />;
-          })}
+        <div style={{ marginTop: "55px", marginBottom: "15px" }}>
+          <div className="chat_header">
+            <div className="chat_pp_recipient">
+              <img src={profilePicture.ppurl}></img>
+            </div>
+            <h3>{recipient}</h3>
+          </div>
+          {orderedMsgs &&
+            orderedMsgs.map((m) => {
+              return (
+                <Message
+                  key={m.id}
+                  message={m.message}
+                  sender={m.sender}
+                  createdAt={m.createdAt}
+                />
+              );
+            })}
+
+          <div ref={scroll}></div>
+        </div>
+        <div className="chat_form_wrap">
+          <Form>
+            <TextField
+              type="text"
+              variant="standard"
+              multiline
+              placeholder="Enter message"
+              onChange={(e) => {
+                setMessage(e.target.value);
+              }}
+              value={message}
+            ></TextField>
+            <Button type="submit" onClick={handleSend}>
+              Send
+            </Button>
+          </Form>
+        </div>
       </div>
-      <Form
-        style={{
-          position: "fixed",
-          bottom: "2vh",
-          width: "55vw",
-          display: "flex",
-          marginTop: "2vh",
-        }}
-      >
-        <Form.Control
-          type="text"
-          placeholder="Enter message"
-          onChange={(e) => {
-            setMessage(e.target.value);
-          }}
-        ></Form.Control>
-        <Button onClick={handleSend}>Send</Button>
-      </Form>
     </div>
   );
 }

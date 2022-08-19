@@ -79,7 +79,7 @@ export default function Semester() {
                 return (
                   <ListGroupItem>
                     <Link
-                      to="/semesters/semester/subject"
+                      to={`/semesters/semester${sem}/subject`}
                       state={{ subject: s }}
                     >
                       {s}
@@ -111,7 +111,8 @@ export default function Semester() {
                 ></Form.Control>
               </Form>
               <Button
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   addNewSubject() && setAddSubject(!addSubject);
                 }}
               >
@@ -121,7 +122,6 @@ export default function Semester() {
           )}
         </Card.Footer>
       </Card>
-      <div>{currentSubjects && JSON.stringify(currentSubjects)} </div>
     </>
   );
 }

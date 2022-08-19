@@ -16,6 +16,8 @@ export function AuthProvider({ children }) {
     const createUser = async (email) => {
       await setDoc(doc(db, "users", `${email}`), {
         email: email,
+        ppurl:
+          "https://firebasestorage.googleapis.com/v0/b/social-app-6644b.appspot.com/o/Profile%20pictures%2Fdefault%2Favatar.jpeg?alt=media&token=e8e4f091-46c3-4f1a-a7da-6dbb2d32f829",
       });
     };
     createUser(email);

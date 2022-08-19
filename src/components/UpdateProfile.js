@@ -1,8 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Card, Form, Button, Alert } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import Navigation from "./Navigation";
+import { db, storage } from "../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { updateDoc, doc } from "firebase/firestore";
 
 function UpdateProfile() {
   const emailRef = useRef();
@@ -11,7 +14,11 @@ function UpdateProfile() {
   const { currentUser, updatePassword, updateEmail } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [uploadPic, setUploadPic] = useState(null);
+  const [profilePic, setProfilePic] = useState(null);
   const navigate = useNavigate();
+
+  const userRef = doc(db, "users", `${currentUser.email}`);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -44,46 +51,90 @@ function UpdateProfile() {
       });
   }
 
+  const uploadProfilePic = async () => {
+    if (uploadPic === null) return;
+
+    const profilePicRef = ref(
+      storage,
+      `Profile pictures/${currentUser.email}/${currentUser.email}`
+    );
+    uploadBytes(profilePicRef, uploadPic).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        setProfilePic(url);
+      });
+    });
+    console.log(profilePic);
+
+    await updateDoc(userRef, {
+      ppurl: profilePic,
+    });
+  };
+
+  useEffect(() => {
+    if (profilePic === null) return;
+    const updateUser = async () => {
+      await updateDoc(userRef, {
+        ppurl: profilePic,
+      });
+    };
+    updateUser();
+  }, [profilePic]);
+
   return (
     <>
       <Navigation />
-      <Card>
-        <Card.Body>
-          <h2 className="text-center mb-4">Update Profile</h2>
-          {error && <Alert variant="danger">{error}</Alert>}
-          <Form onSubmit={handleSubmit}>
-            <Form.Group id="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                ref={emailRef}
-                defaultValue={currentUser.email}
-              ></Form.Control>
-            </Form.Group>
-            <Form.Group id="password">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                ref={passwordRef}
-                placeholder="Leave blank to keep the same"
-              ></Form.Control>
-            </Form.Group>
-            <Form.Group id="password-confirm">
-              <Form.Label>Password Confirmation</Form.Label>
-              <Form.Control
-                type="password"
-                ref={passwordConfirmRef}
-                placeholder="Leave blank to keep the same"
-              ></Form.Control>
-            </Form.Group>
-            <Button disabled={loading} className="w-100 mt-3" type="submit">
-              Update
-            </Button>
-          </Form>
-        </Card.Body>
-      </Card>
+      <div className="center_div">
+        <Card>
+          <Card.Body>
+            <h2 className="text-center mb-4">Update Profile</h2>
+            {error && <Alert variant="danger">{error}</Alert>}
+            <Form onSubmit={handleSubmit}>
+              <Form.Group>
+                <Form.Label>Profile picture</Form.Label>
+                <Form.Control
+                  onChange={(e) => {
+                    setUploadPic(e.target.files[0]);
+                  }}
+                  type="file"
+                  accept="image"
+                ></Form.Control>
+                <Button onClick={uploadProfilePic}>Upload</Button>
+              </Form.Group>
+              <Form.Group id="email">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  ref={emailRef}
+                  defaultValue={currentUser.email}
+                ></Form.Control>
+              </Form.Group>
+              <Form.Group id="password">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  ref={passwordRef}
+                  placeholder="Leave blank to keep the same"
+                ></Form.Control>
+              </Form.Group>
+              <Form.Group id="password-confirm">
+                <Form.Label>Password Confirmation</Form.Label>
+                <Form.Control
+                  type="password"
+                  ref={passwordConfirmRef}
+                  placeholder="Leave blank to keep the same"
+                ></Form.Control>
+              </Form.Group>
+              <Button disabled={loading} className="w-100 mt-3" type="submit">
+                Update
+              </Button>
+            </Form>
+          </Card.Body>
+        </Card>
+      </div>
       <div className="w-100 text-center mt-2">
-        <Link to="/">Cancel</Link>
+        <Link to="/profile" state={{ profile: currentUser.email }}>
+          Cancel
+        </Link>
       </div>
     </>
   );

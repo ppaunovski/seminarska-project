@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { TextField } from "@mui/material";
-import { addDoc, collection, Firestore } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db, auth } from "../firebase";
 
 export default function NewPost() {
@@ -14,7 +14,8 @@ export default function NewPost() {
       body: post,
       comments: 3,
       likes: 2,
-      postedAt: new Date().toISOString(),
+      // postedAt: new Date().toISOString(),
+      postedAt: serverTimestamp(),
     });
 
     setPost("");
@@ -24,6 +25,7 @@ export default function NewPost() {
       <Form>
         <Form.Group>
           <TextField
+            value={post}
             placeholder="What's on your mind?"
             fullWidth
             variant="standard"
@@ -33,7 +35,6 @@ export default function NewPost() {
             }}
           ></TextField>
         </Form.Group>
-        {post}
         <Button className="mt-2" onClick={createPost}>
           Post
         </Button>

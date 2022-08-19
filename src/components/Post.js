@@ -1,4 +1,5 @@
 import {
+  getDoc,
   getDocs,
   collection,
   addDoc,
@@ -7,8 +8,10 @@ import {
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
-import { db, auth } from "../firebase";
+import { db, auth, storage } from "../firebase";
 import { Link } from "react-router-dom";
+import { listAll, getDownloadURL, ref } from "firebase/storage";
+import Moment from "react-moment";
 
 export default function Post(props) {
   const [showComms, setShowComms] = useState(false);
@@ -30,14 +33,14 @@ export default function Post(props) {
     getComments();
   }, [comments]);
 
-  useEffect(() => {
-    const getLikes = async () => {
-      const data = await getDocs(likesCollectionRef);
-      setLikes(data.docs.map((doc) => ({ ...doc.data() })));
+  // useEffect(() => {
+  //   const getLikes = async () => {
+  //     const data = await getDocs(likesCollectionRef);
+  //     setLikes(data.docs.map((doc) => ({ ...doc.data() })));
 
-      getLikes();
-    };
-  }, []);
+  //     getLikes();
+  //   };
+  // }, []);
 
   const createNewLike = async () => {
     await addDoc(likesCollectionRef, {
@@ -58,41 +61,64 @@ export default function Post(props) {
     setNewComment("");
   };
 
-  const toggleLike = () => {
-    setLike(!like);
-    if (like) {
-      createNewLike();
-    } else {
-      // deleteDoc(doc(db, "likes", `${likeID}`));
-    }
-  };
+  // const toggleLike = () => {
+  //   setLike(!like);
+  //   if (like) {
+  //     createNewLike();
+  //   } else {
+  //     // deleteDoc(doc(db, "likes", `${likeID}`));
+  //   }
+  // };
 
-  const showLikes = () => {
-    let count = 0;
-    for (let i = 0; i <= likes.length(); i++) {
-      if (
-        likes[i].postID === props.post.id &&
-        likes[i].user === auth.currentUser.email
-      ) {
-        count++;
-      }
-    }
-    return count;
-  };
+  // const showLikes = () => {
+  //   let count = 0;
+  //   for (let i = 0; i <= likes.length(); i++) {
+  //     if (
+  //       likes[i].postID === props.post.id &&
+  //       likes[i].user === auth.currentUser.email
+  //     ) {
+  //       count++;
+  //     }
+  //   }
+  //   return count;
+  // };
+
+  const [profilePicture, setProfilePicture] = useState({});
+
+  useEffect(() => {
+    const profilePicRef = ref(storage, `Profile pictures/${props.post.author}`);
+
+    const getPP = async () => {
+      const pp = await getDoc(doc(db, "users", `${props.post.author}`));
+      console.log(pp);
+      console.log(pp.data());
+      setProfilePicture(pp.data());
+      console.log(profilePicture.ppurl);
+    };
+
+    getPP();
+  }, []);
 
   return (
     <Card>
       <Card.Title>
         <Link to="/profile" state={{ profile: props.post.author }}>
-          {props.post.author}
+          <div className="forum_img">
+            <img src={profilePicture.ppurl}></img>
+
+            {props.post.author}
+          </div>
         </Link>
       </Card.Title>
       <Card.Body>
         <Card.Text>{props.post.body}</Card.Text>
-        <Button onClick={toggleLike}>Like{showLikes}</Button>
+        {/* <Button onClick={toggleLike}>Like{showLikes}</Button> */}
       </Card.Body>
 
       <Card.Footer>
+        <Moment fromNow>
+          {props.post.postedAt && props.post.postedAt.toDate()}
+        </Moment>
         <Button variant="link" onClick={() => setShowComms(!showComms)}>
           Show comments
         </Button>
