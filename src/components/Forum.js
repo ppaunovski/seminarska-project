@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Container, useAccordionButton } from "react-bootstrap";
 import Navigation from "./Navigation";
 import NewPost from "./NewPost";
@@ -9,35 +9,50 @@ import {
   orderBy,
   limit,
   onSnapshot,
+  startAfter,
 } from "firebase/firestore";
 import { db, storage } from "../firebase";
 import Post from "./Post";
 import { listAll, getDownloadURL, ref } from "firebase/storage";
 import { useAuth } from "../contexts/AuthContext";
+import { Box, Button } from "@mui/material";
 
 export default function Forum() {
-  const { currentUser } = useAuth();
   const postsCollectionRef = collection(db, "posts");
   const [posts, setPosts] = useState([]);
-  // useEffect(() => {
-  //   const getPosts = async () => {
-  //     const data = await getDocs(postsCollectionRef);
-  //     setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  //   };
+  const [isFirst, setIsFirst] = useState(true);
+  const [nextQuery, setNextQuery] = useState({});
 
-  //   getPosts();
-  // }, [posts]);
+  const getPosts = async () => {
+    let q;
+    if (isFirst) {
+      q = query(postsCollectionRef, orderBy("postedAt", "desc"), limit(5));
+      setIsFirst(false);
+    } else {
+      console.log("next", nextQuery);
+      q = nextQuery;
+    }
 
-  const getPosts = () => {
-    const q = query(postsCollectionRef, orderBy("postedAt", "desc"), limit(10));
-
-    onSnapshot(q, (QuerySnapshot) => {
-      let pts = [];
-      QuerySnapshot.forEach((doc) => {
-        pts.push(doc.data());
-      });
-      setPosts(pts);
+    const documentSnapshots = await getDocs(q);
+    documentSnapshots.docs.map((doc) => {
+      const data = doc.data();
+      setPosts((prev) => [...prev, { data: data, id: doc.id }]);
     });
+
+    const lastVisible =
+      documentSnapshots.docs[documentSnapshots.docs.length - 1];
+    console.log("last", lastVisible);
+
+    if (lastVisible) {
+      setNextQuery(
+        query(
+          postsCollectionRef,
+          orderBy("postedAt", "desc"),
+          startAfter(lastVisible),
+          limit(5)
+        )
+      );
+    }
   };
 
   useEffect(() => {
@@ -45,21 +60,18 @@ export default function Forum() {
   }, []);
 
   return (
-    <>
-      <Navigation />
-      <Container
-        className="d-flex align-items-top justify-content-center"
-        style={{ minHeight: "100vh" }}
-      >
-        <Container style={{ marginTop: "100px" }}>
+    <Box flex={3}>
+      <Container>
+        <Container>
           <NewPost />
           <div className="posts">
             {posts.map((p) => {
-              return <Post key={p.id} post={p} />;
+              return <Post key={p.id} post={p.data} postId={p.id} />;
             })}
           </div>
+          <Button onClick={getPosts}>Load more</Button>
         </Container>
       </Container>
-    </>
+    </Box>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import Navigation from "./Navigation";
+import Navbar from "./Navbar";
 import Message from "./Message";
 import Form from "react-bootstrap/Form";
 import { Button } from "react-bootstrap";
@@ -20,7 +20,7 @@ import {
 import { db } from "../firebase";
 import { useAuth } from "../contexts/AuthContext";
 import { TextField } from "@mui/material";
-
+//
 function Chat() {
   const location = useLocation();
   const { sender, recipient } = location.state;
@@ -40,7 +40,7 @@ function Chat() {
     const q = query(
       messagesCollectionRef,
       orderBy("createdAt", "asc"),
-      limit(10)
+      limit(20)
     );
 
     onSnapshot(q, (QuerySnapshot) => {
@@ -71,12 +71,36 @@ function Chat() {
   const handleSend = async (e) => {
     e.preventDefault();
 
+    const currentUserPP = await getDoc(
+      doc(db, "users", `${currentUser.email}`)
+    );
+
     await addDoc(messagesCollectionRef, {
       message: message,
       recipient: recipient,
       sender: sender,
       createdAt: serverTimestamp(),
     });
+    await setDoc(doc(db, "users", `${currentUser.email}`, "chats", id), {
+      chatter: currentUser.email === sender ? recipient : sender,
+      chatterPP:
+        currentUser.email === sender
+          ? profilePicture.ppurl
+          : currentUserPP.data().ppurl,
+    });
+    await setDoc(
+      doc(
+        db,
+        "users",
+        `${currentUser.email === sender ? recipient : sender}`,
+        "chats",
+        id
+      ),
+      {
+        chatter: currentUser.email,
+        chatterPP: currentUserPP.data().ppurl,
+      }
+    );
     setMessage("");
     scroll.current.scrollIntoView({ behavoir: "smooth" });
   };
@@ -94,7 +118,7 @@ function Chat() {
         overflowY: "scroll",
       }}
     >
-      <Navigation />
+      <Navbar />
 
       <div>
         <div style={{ marginTop: "55px", marginBottom: "15px" }}>

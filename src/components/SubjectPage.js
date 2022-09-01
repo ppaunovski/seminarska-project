@@ -1,123 +1,97 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import Navigation from "./Navigation";
-import { Form, Button } from "react-bootstrap";
+import Navbar from "./Navbar";
+//import { Form, Button } from "react-bootstrap";
 import { storage, db } from "../firebase";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { setDoc, collection, doc, getDoc, getDocs } from "firebase/firestore";
+import SubjectFileCard from "./SubjectFileCard";
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  Button,
+  Modal,
+  Typography,
+} from "@mui/material";
+import VerticalOptionsButton from "./VerticalOptionsButton";
+import { useAuth } from "../contexts/AuthContext";
+import AddIcon from "@mui/icons-material/Add";
+import UploadFile from "./UploadFile";
 
 function SubjectPage() {
+  const { currentUser } = useAuth();
   const location = useLocation();
   const { subject } = location.state;
 
-  const [file, setFile] = useState(null);
   const [fileList, setFileList] = useState([]);
-  const [fileNames, setFileNames] = useState([]);
-  const [refresh, setRefresh] = useState(false);
-  const [neededFile, setNeededFile] = useState({});
 
   const fileListRef = ref(storage, `${subject}/`);
 
-  const uploadFile = async () => {
-    if (file === null) return;
-
-    const fileId = `${subject}/${file.name + v4()}`;
-
-    const fileRef = ref(storage, fileId);
-
-    uploadBytes(fileRef, file).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        setFileList((prev) => [...prev, { url: url, name: file.name }]);
-
-        const addDocument = async () => {
-          await setDoc(
-            doc(db, "subjects", `${subject}`, "files", `${file.name}`),
-            {
-              url: url,
-              fileName: file.name,
-            }
-          );
-        };
-
-        addDocument();
-      });
-    });
-  };
-
   useEffect(() => {
     const getFileNames = async () => {
       const data = await getDocs(collection(db, `subjects/${subject}/files`));
-      setFileNames(data.docs.map((doc) => ({ ...doc.data() })));
-      setRefresh(!refresh);
+      setFileList(data.docs.map((doc) => ({ ...doc.data() })));
     };
 
     getFileNames();
-    console.log("fileNames prv", fileNames);
   }, []);
-
-  useEffect(() => {
-    const getFileNames = async () => {
-      const data = await getDocs(collection(db, `subjects/${subject}/files`));
-      setFileNames(data.docs.map((doc) => ({ ...doc.data() })));
-      setRefresh(!refresh);
-    };
-
-    getFileNames();
-    console.log("fileNames prv", fileNames);
-  }, []);
-
-  useEffect(() => {
-    listAll(fileListRef).then((response) => {
-      response.items.forEach((item) => {
-        getDownloadURL(item).then((url) => {
-          console.log("fileNames", fileNames);
-
-          setNeededFile(fileNames.find((element) => element.url === url));
-        });
-      });
-    });
-  }, [refresh]);
-
-  useEffect(() => {
-    console.log(neededFile);
-    if (neededFile) {
-      setFileList((prev) => [
-        ...prev,
-        { url: neededFile.url, name: neededFile.fileName },
-      ]);
-    }
-  }, [neededFile]);
 
   return (
     <>
-      <Navigation />
-      <h1 className="sub_page_title">{subject}</h1>
-      <div className="sub_page_uploaded_files">
-        <Form>
-          <Form.Control
-            type="file"
-            onChange={(e) => {
-              setFile(e.target.files[0]);
-            }}
-          ></Form.Control>
-          <Button onClick={uploadFile}></Button>
-        </Form>
-        <div className="sub_page_file">
-          <li>
+      <Navbar />
+      <h1 style={{ textAlign: "center", margin: "30px", padding: "5px" }}>
+        {subject}
+      </h1>
+      <Box>
+        <Box
+          className="scrollbar"
+          sx={{
+            maxWidth: "500px",
+            maxHeight: "70vh",
+            margin: "0 auto",
+            overflowY: "scroll",
+          }}
+        >
+          <List>
             {fileList.map((file) => {
               return (
-                <ul key={file.url}>
-                  <img src={file.url}></img>
-                  <a href={file.url} target="_blank">
-                    {file.name}
-                  </a>
-                </ul>
+                <>
+                  <ListItem
+                    disablePadding
+                    sx={{ justifyContent: "space-between" }}
+                  >
+                    <a
+                      target="_blank"
+                      style={{ textDecoration: "none", color: "whitesmoke" }}
+                      href={file.url}
+                    >
+                      <ListItemButton>
+                        <SubjectFileCard key={file.fileId} file={file} />
+                      </ListItemButton>
+                    </a>
+                    {currentUser.email === file.author ? (
+                      <VerticalOptionsButton
+                        key={file.fileId}
+                        calledFrom={"subjectFileCard"}
+                        file={file}
+                        subject={subject}
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </ListItem>
+                </>
               );
             })}
-          </li>
-        </div>
-      </div>
+          </List>
+        </Box>
+        <Box sx={{ margin: "auto" }}>
+          <UploadFile modal={false} subject={subject} />
+        </Box>
+      </Box>
     </>
   );
 }

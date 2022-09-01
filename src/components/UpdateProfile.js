@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Card, Form, Button, Alert } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import Navigation from "./Navigation";
+import Navbar from "./Navbar";
 import { db, storage } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { updateDoc, doc } from "firebase/firestore";
@@ -82,7 +82,7 @@ function UpdateProfile() {
 
   return (
     <>
-      <Navigation />
+      <Navbar />
       <div className="center_div">
         <Card>
           <Card.Body>

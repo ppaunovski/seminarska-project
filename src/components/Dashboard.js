@@ -11,6 +11,10 @@ import Navigation from "./Navigation";
 import Profile from "./Profile";
 import Forum from "./Forum";
 import Semesters from "./Semesters";
+import { Stack, Box } from "@mui/material";
+import Sidebar from "./Sidebar";
+import Rightbar from "./Rightbar";
+import Navbar from "./Navbar";
 
 export default function Dashboard() {
   const [error, setError] = useState("");
@@ -29,10 +33,13 @@ export default function Dashboard() {
   }
 
   return (
-    <>
-      <Navigation />
-      <Button>Forum</Button>
-      <Button>Subjects</Button>
-    </>
+    <Box>
+      <Navbar />
+      <Stack direction="row" justifyContent="space-between" gap={2}>
+        <Sidebar />
+        <Forum />
+        <Rightbar />
+      </Stack>
+    </Box>
   );
 }

@@ -9,11 +9,22 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import { Card, ListGroup, ListGroupItem, Button, Form } from "react-bootstrap";
-import { Input } from "@mui/material";
+import {
+  Box,
+  Button,
+  CardActions,
+  Input,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@emotion/react";
-import Navigation from "./Navigation";
+import Navbar from "./Navbar";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function Semester() {
   const location = useLocation();
@@ -67,32 +78,43 @@ export default function Semester() {
 
   return (
     <>
-      <Navigation />
-      <Card>
-        <Card.Title>
-          <h2 className="text-center">Semester {sem}</h2>
-        </Card.Title>
-        <Card.Body>
-          <ListGroup>
-            {currentSubjects &&
-              currentSubjects.map((s) => {
-                return (
-                  <ListGroupItem>
-                    <Link
-                      to={`/semesters/semester${sem}/subject`}
-                      state={{ subject: s }}
-                    >
-                      {s}
-                    </Link>
-                  </ListGroupItem>
-                );
-              })}
-          </ListGroup>
-        </Card.Body>
-        <Card.Footer>
+      <Navbar />
+      <Box
+        sx={{
+          maxWidth: "500px",
+          margin: "0 auto",
+        }}
+      >
+        <Typography
+          sx={{ mt: 4, mb: 2, textAlign: "center" }}
+          variant="h4"
+          component="div"
+        >
+          Семестар {sem}
+        </Typography>
+        <List>
+          {currentSubjects &&
+            currentSubjects.map((s) => {
+              return (
+                <Link
+                  key={sem}
+                  style={{ textDecoration: "none", color: "black" }}
+                  to={`/semesters/semester${sem}/subject`}
+                  state={{ subject: s }}
+                >
+                  <ListItem>
+                    <ListItemButton>
+                      <ListItemText>{s}</ListItemText>
+                    </ListItemButton>
+                  </ListItem>
+                </Link>
+              );
+            })}
+        </List>
+        <Box>
           {!addSubject ? (
             <Button
-              variant="link"
+              variant="outlined"
               onClick={() => {
                 setAddSubject(!addSubject);
               }}
@@ -100,28 +122,30 @@ export default function Semester() {
               Add new subject
             </Button>
           ) : (
-            <>
-              <Form>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter the name of the subject"
+            <Box>
+              <CardActions disableSpacing>
+                <TextField
                   onChange={(event) => {
                     setNewSubjectsTitle(event.target.value);
                   }}
-                ></Form.Control>
-              </Form>
-              <Button
-                onClick={(e) => {
-                  e.preventDefault();
-                  addNewSubject() && setAddSubject(!addSubject);
-                }}
-              >
-                +
-              </Button>
-            </>
+                  placeholder="Enter the name of the subject"
+                  variant="standard"
+                  fullWidth
+                />
+
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addNewSubject() && setAddSubject(!addSubject);
+                  }}
+                >
+                  <AddIcon />
+                </Button>
+              </CardActions>
+            </Box>
           )}
-        </Card.Footer>
-      </Card>
+        </Box>
+      </Box>
     </>
   );
 }

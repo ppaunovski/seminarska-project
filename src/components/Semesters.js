@@ -1,11 +1,17 @@
-import { Card, Button } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
-import Navigation from "./Navigation";
+import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
-import { ListGroup, ListGroupItem } from "bootstrap-react";
-import { collection, getDoc, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
-import Semester from "./Semester";
+import { Box } from "@mui/system";
+import {
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Typography,
+  Divider,
+} from "@mui/material";
 
 export default function Semesters() {
   const [semester, setSemester] = useState(null);
@@ -29,173 +35,139 @@ export default function Semesters() {
   };
 
   return (
-    <>
-      <Navigation />
+    <div className="semesters_body_wrap">
+      <Navbar />
 
-      <div>
-        {semester ? (
-          <Semester
-            key={semester}
-            semester={semester}
-            subjects={semesters[semester - 1].data}
-          />
-        ) : (
-          <Card>
-            <h2 className="text-center">Semesters</h2>
-            <Card.Body>
-              <ListGroup>
-                <ListGroupItem>
-                  <Button
-                    variant="link"
-                    onClick={() => {
-                      setAllProps(1);
-                    }}
-                  >
-                    <Link
-                      to="/semesters/semester1"
-                      state={{
-                        semester: 1,
-                      }}
-                    >
-                      Semester 1
-                    </Link>
-                  </Button>
-                </ListGroupItem>
-                <ListGroupItem>
-                  <Button
-                    variant="link"
-                    onClick={() => {
-                      setAllProps(2);
-                    }}
-                  >
-                    <Link
-                      to="/semesters/semester2"
-                      state={{
-                        semester: 2,
-                      }}
-                    >
-                      Semester 2
-                    </Link>
-                  </Button>
-                </ListGroupItem>
-                <ListGroupItem>
-                  <Button
-                    variant="link"
-                    onClick={() => {
-                      setAllProps(3);
-                    }}
-                  >
-                    <Link
-                      to="/semesters/semester3"
-                      state={{
-                        semester: 3,
-                      }}
-                    >
-                      Semester 3
-                    </Link>
-                  </Button>
-                </ListGroupItem>
-                <ListGroupItem>
-                  <Button
-                    variant="link"
-                    onClick={() => {
-                      setAllProps(4);
-                    }}
-                  >
-                    <Link
-                      to="/semesters/semester4"
-                      state={{
-                        semester: 4,
-                      }}
-                    >
-                      Semester 4
-                    </Link>
-                  </Button>
-                </ListGroupItem>
-                <ListGroupItem>
-                  <Button
-                    variant="link"
-                    onClick={() => {
-                      setAllProps(5);
-                    }}
-                  >
-                    <Link
-                      to="/semesters/semester5"
-                      state={{
-                        semester: 5,
-                      }}
-                    >
-                      Semester 5
-                    </Link>
-                  </Button>
-                </ListGroupItem>
-                <ListGroupItem>
-                  <Button
-                    variant="link"
-                    onClick={() => {
-                      setAllProps(6);
-                    }}
-                  >
-                    <Link
-                      to="/semesters/semester6"
-                      state={{
-                        semester: 6,
-                      }}
-                    >
-                      Semester 6
-                    </Link>
-                  </Button>
-                </ListGroupItem>
-                <ListGroupItem>
-                  <Button
-                    variant="link"
-                    onClick={() => {
-                      setAllProps(7);
-                    }}
-                  >
-                    <Link
-                      to="/semesters/semester7"
-                      state={{
-                        semester: 7,
-                      }}
-                    >
-                      Semester 7
-                    </Link>
-                  </Button>
-                </ListGroupItem>
-                <ListGroupItem>
-                  <Button
-                    variant="link"
-                    onClick={() => {
-                      setAllProps(8);
-                    }}
-                  >
-                    <Link
-                      to="/semesters/semester8"
-                      state={{
-                        semester: 8,
-                      }}
-                    >
-                      Semester 8
-                    </Link>
-                  </Button>
-                </ListGroupItem>
-              </ListGroup>
-            </Card.Body>
-          </Card>
-        )}
-      </div>
-      {/* 
-      <Card>
-        <Card.Body>{JSON.stringify(displaySem.data)}</Card.Body>
-      </Card>
-      <Card>
-        <Card.Body>
-          {semesters.map((s) => {
-            return <Semester key={displaySem.id} subjects={displaySem.data} />;
-          })}
-        </Card.Body>
-      </Card> */}
-    </>
+      <Box
+        sx={{
+          maxWidth: "400px",
+          margin: "0 auto",
+        }}
+      >
+        <Typography
+          sx={{ Семестарmt: 4, mb: 2, textAlign: "center" }}
+          variant="h4"
+          component="div"
+        >
+          Семестри
+        </Typography>
+
+        <List>
+          <Divider />
+          <Link
+            style={{ textDecoration: "none", color: "black" }}
+            to="/semesters/semester1"
+            state={{
+              semester: 1,
+            }}
+          >
+            <ListItem>
+              <ListItemButton>
+                <ListItemText>Семестар 1</ListItemText>
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Divider />
+          <Link
+            style={{ textDecoration: "none", color: "black" }}
+            to="/semesters/semester2"
+            state={{
+              semester: 2,
+            }}
+          >
+            <ListItem>
+              <ListItemButton>
+                <ListItemText>Семестар 2</ListItemText>
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Divider />
+          <Link
+            style={{ textDecoration: "none", color: "black" }}
+            to="/semesters/semester3"
+            state={{
+              semester: 3,
+            }}
+          >
+            <ListItem>
+              <ListItemButton>
+                <ListItemText>Семестар 3</ListItemText>
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Divider />
+          <Link
+            style={{ textDecoration: "none", color: "black" }}
+            to="/semesters/semester4"
+            state={{
+              semester: 4,
+            }}
+          >
+            <ListItem>
+              <ListItemButton>
+                <ListItemText>Семестар 4</ListItemText>
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Divider />
+          <Link
+            style={{ textDecoration: "none", color: "black" }}
+            to="/semesters/semester5"
+            state={{
+              semester: 5,
+            }}
+          >
+            <ListItem>
+              <ListItemButton>
+                <ListItemText>Семестар 5</ListItemText>
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Divider />
+          <Link
+            style={{ textDecoration: "none", color: "black" }}
+            to="/semesters/semester6"
+            state={{
+              semester: 6,
+            }}
+          >
+            <ListItem>
+              <ListItemButton>
+                <ListItemText>Семестар 6</ListItemText>
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Divider />
+          <Link
+            style={{ textDecoration: "none", color: "black" }}
+            to="/semesters/semester7"
+            state={{
+              semester: 7,
+            }}
+          >
+            <ListItem>
+              <ListItemButton>
+                <ListItemText>Семестар 7</ListItemText>
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Divider />
+          <Link
+            style={{ textDecoration: "none", color: "black" }}
+            to="/semesters/semester8"
+            state={{
+              semester: 8,
+            }}
+          >
+            <ListItem>
+              <ListItemButton>
+                <ListItemText>Семестар 8</ListItemText>
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Divider />
+        </List>
+      </Box>
+    </div>
   );
 }

@@ -16,12 +16,13 @@ import Semester from "./Semester";
 import SubjectPage from "./SubjectPage";
 import Chat from "./Chat";
 import "../styles/styles.css";
+import Navbar from "./Navbar";
 
 function App() {
   return (
-    <Container
-    // className="d-flex align-items-center justify-content-center"
-    // style={{ minHeight: "100vh" }}
+    <
+      // className="d-flex align-items-center justify-content-center"
+      // style={{ minHeight: "100vh" }}
     >
       <div
       //className="w-100"
@@ -47,7 +48,7 @@ function App() {
                 }
               />
               <Route
-                path="/profile"
+                path="/profile/:id"
                 element={
                   <PrivateRoute>
                     <Profile />
@@ -56,7 +57,7 @@ function App() {
               />
 
               <Route
-                path="/message"
+                path="/profile/:id/message"
                 element={
                   <PrivateRoute>
                     <Chat />
@@ -238,7 +239,7 @@ function App() {
           </AuthProvider>
         </Router>
       </div>
-    </Container>
+    </>
   );
 }
 
