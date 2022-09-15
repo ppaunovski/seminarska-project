@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
 import Message from "./Message";
 import Form from "react-bootstrap/Form";
-import { Button } from "react-bootstrap";
 import {
   getDoc,
   doc,
@@ -16,17 +15,26 @@ import {
   serverTimestamp,
   onSnapshot,
   QuerySnapshot,
+  getDocs,
+  startAfter,
+  startAt,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../contexts/AuthContext";
-import { TextField } from "@mui/material";
+import { Avatar, Box, Button, TextField } from "@mui/material";
+import { v4 } from "uuid";
 //
-function Chat() {
-  const location = useLocation();
-  const { sender, recipient } = location.state;
+
+function Chat({ sender, recipient }) {
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
   const [orderedMsgs, setOrderedMsgs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [isFirst, setIsFirst] = useState(true);
+  const [nextQuery, setNextQuery] = useState({});
+  const [addedNewMess, setAddedNewMess] = useState(false);
+  const [profilePicture, setProfilePicture] = useState({});
+  const [refresh, setRefresh] = useState(false);
   const scroll = useRef();
 
   const { currentUser } = useAuth();
@@ -36,37 +44,55 @@ function Chat() {
 
   const messagesCollectionRef = collection(db, "messages", id, "chat");
 
-  const getMess = () => {
-    const q = query(
-      messagesCollectionRef,
-      orderBy("createdAt", "asc"),
-      limit(20)
-    );
+  const getMess = async () => {
+    console.log("getMess called");
+    setLoading(true);
 
-    onSnapshot(q, (QuerySnapshot) => {
-      let msgs = [];
-      QuerySnapshot.forEach((doc) => {
-        msgs.push(doc.data());
-      });
-      setOrderedMsgs(msgs);
+    let q;
+    if (isFirst || addedNewMess) {
+      q = query(messagesCollectionRef, orderBy("createdAt", "desc"), limit(5));
+      setIsFirst(false);
+      setAddedNewMess(false);
+    } else {
+      q = nextQuery;
+    }
+
+    const documentSnapshots = await getDocs(q);
+    documentSnapshots.docs.map((doc) => {
+      const data = doc.data();
+      setOrderedMsgs((prev) => [...prev, { data: data }]);
     });
-  };
 
-  const [profilePicture, setProfilePicture] = useState({});
+    const lastVisible =
+      documentSnapshots.docs[documentSnapshots.docs.length - 1];
+
+    if (lastVisible) {
+      setHasMore(true);
+      setNextQuery(
+        query(
+          messagesCollectionRef,
+          orderBy("createdAt", "desc"),
+          startAfter(lastVisible),
+          limit(5)
+        )
+      );
+    } else {
+      setHasMore(false);
+    }
+
+    setLoading(false);
+  };
 
   useEffect(() => {
     getMess();
 
     const getPP = async () => {
       const pp = await getDoc(doc(db, "users", `${recipient}`));
-      console.log(pp);
-      console.log(pp.data());
       setProfilePicture(pp.data());
-      console.log(profilePicture.ppurl);
     };
 
     getPP();
-  }, []);
+  }, [refresh]);
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -102,65 +128,135 @@ function Chat() {
       }
     );
     setMessage("");
-    scroll.current.scrollIntoView({ behavoir: "smooth" });
+    setAddedNewMess(true);
   };
 
-  return (
-    <div
-      style={{
-        height: "100vh",
-        backgroundColor: "gray",
-        width: "55vw",
-        position: "relative",
-        marginLeft: "auto",
-        marginRight: "auto",
-        paddingBottom: "10vh",
-        overflowY: "scroll",
-      }}
-    >
-      <Navbar />
+  const observer = useRef();
+  const lastMessElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          console.log("Visible", node);
+          getMess();
+        }
+      });
+      if (node) observer.current.observe(node);
+      console.log(node);
+    },
+    [loading, hasMore]
+  );
 
-      <div>
-        <div style={{ marginTop: "55px", marginBottom: "15px" }}>
-          <div className="chat_header">
-            <div className="chat_pp_recipient">
-              <img src={profilePicture.ppurl}></img>
-            </div>
-            <h3>{recipient}</h3>
-          </div>
-          {orderedMsgs &&
-            orderedMsgs.map((m) => {
+  return (
+    <Box flex={3} height={"100%"}>
+      <Box
+        sx={{
+          backgroundColor: "gray",
+          height: "10vh",
+          display: "grid",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "7px",
+          }}
+        >
+          <Avatar src={profilePicture.ppurl} />
+          <h3>{recipient}</h3>
+        </Box>
+      </Box>
+      {/* <Box
+        sx={{
+          overflow: "auto",
+          backgroundColor: "lightgray",
+          height: "71.5vh",
+        }}
+      >
+        <Box
+          padding={"5px"}
+          // // sx={{ display: "flex", flexDirection: "column-reverse" }}
+          sx={{}}
+        > */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column-reverse",
+          justifyContent: "end",
+          overflowY: "scroll",
+          height: "71.5vh",
+          backgroundColor: "lightgray",
+        }}
+      >
+        {orderedMsgs &&
+          orderedMsgs.map((m, index) => {
+            if (orderedMsgs.length === index + 1) {
+              return (
+                <>
+                  <Message
+                    key={m.data.id}
+                    message={m.data.message}
+                    sender={m.data.sender}
+                    createdAt={m.data.createdAt}
+                  />
+                  <div ref={lastMessElementRef} key={v4()}></div>
+                </>
+              );
+            } else {
               return (
                 <Message
-                  key={m.id}
-                  message={m.message}
-                  sender={m.sender}
-                  createdAt={m.createdAt}
+                  key={m.data.id}
+                  message={m.data.message}
+                  sender={m.data.sender}
+                  createdAt={m.data.createdAt}
                 />
               );
-            })}
-
-          <div ref={scroll}></div>
+            }
+          })}
+        {/* </Box>
+        </Box> */}
+        <div
+          ref={scroll}
+          style={{ width: "10px", height: "2px", padding: "2px" }}
+        ></div>
+      </Box>
+      <Box
+        sx={{
+          backgroundColor: "gray",
+          height: "10vh",
+          display: "grid",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            gap: "7px",
+          }}
+        >
+          <TextField
+            type="text"
+            variant="standard"
+            sx={{ width: "55vw" }}
+            multiline
+            placeholder="Enter message"
+            onChange={(e) => {
+              setMessage(e.target.value);
+            }}
+            value={message}
+          ></TextField>
+          <Button variant="contained" onClick={handleSend}>
+            Send
+          </Button>
         </div>
-        <div className="chat_form_wrap">
-          <Form>
-            <TextField
-              type="text"
-              variant="standard"
-              multiline
-              placeholder="Enter message"
-              onChange={(e) => {
-                setMessage(e.target.value);
-              }}
-              value={message}
-            ></TextField>
-            <Button type="submit" onClick={handleSend}>
-              Send
-            </Button>
-          </Form>
-        </div>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 

@@ -15,12 +15,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 // import AdbIcon from "@mui/icons-material/Adb";
 import { db } from "../firebase";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import ForumIcon from "@mui/icons-material/Forum";
 import { ListItemIcon, ListItemText } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ChatIcon from "@mui/icons-material/Chat";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -47,11 +48,20 @@ const Navbar = () => {
     setAnchorElUser(null);
   };
 
+  const updateOnlineStatus = async (isOnline, email) => {
+    await updateDoc(doc(db, "users", `${email}`), {
+      isOnline: isOnline,
+    });
+    await deleteDoc(doc(db, "onlineUsers", `${email}`));
+  };
+
   async function handleLogout() {
     setError("");
 
     try {
-      await logout();
+      const email = currentUser.email;
+      await logout(currentUser.email);
+      updateOnlineStatus(false, email);
       navigate("/login");
     } catch {
       setError("Failed to Log Out!");
@@ -236,6 +246,18 @@ const Navbar = () => {
                     <PersonIcon fontSize="small" />
                   </ListItemIcon>
                   <ListItemText>Profile</ListItemText>
+                </MenuItem>
+              </Link>
+              <Link
+                style={{ textDecoration: "none", color: "black" }}
+                to={`/messenger/${currentUser.email}`}
+                state={{ sender: currentUser.email, recipient: null }}
+              >
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <ListItemIcon>
+                    <ChatIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Chats</ListItemText>
                 </MenuItem>
               </Link>
               <MenuItem onClick={handleCloseUserMenu && handleLogout}>

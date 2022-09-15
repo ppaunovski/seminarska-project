@@ -16,20 +16,25 @@ import Post from "./Post";
 import { listAll, getDownloadURL, ref } from "firebase/storage";
 import { useAuth } from "../contexts/AuthContext";
 import { Box, Button } from "@mui/material";
+import { v4 } from "uuid";
 
 export default function Forum() {
   const postsCollectionRef = collection(db, "posts");
   const [posts, setPosts] = useState([]);
   const [isFirst, setIsFirst] = useState(true);
   const [nextQuery, setNextQuery] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   const getPosts = async () => {
+    console.log("getPosts called");
+    setLoading(true);
     let q;
     if (isFirst) {
       q = query(postsCollectionRef, orderBy("postedAt", "desc"), limit(5));
       setIsFirst(false);
     } else {
-      console.log("next", nextQuery);
+      //console.log("next", nextQuery);
       q = nextQuery;
     }
 
@@ -41,9 +46,10 @@ export default function Forum() {
 
     const lastVisible =
       documentSnapshots.docs[documentSnapshots.docs.length - 1];
-    console.log("last", lastVisible);
+    //console.log("last", lastVisible);
 
     if (lastVisible) {
+      setHasMore(true);
       setNextQuery(
         query(
           postsCollectionRef,
@@ -52,8 +58,29 @@ export default function Forum() {
           limit(5)
         )
       );
+    } else {
+      setHasMore(false);
     }
+
+    setLoading(false);
   };
+
+  const observer = useRef();
+  const lastPostElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          console.log("Visible", node);
+          getPosts();
+        }
+      });
+      if (node) observer.current.observe(node);
+      console.log(node);
+    },
+    [loading, hasMore]
+  );
 
   useEffect(() => {
     getPosts();
@@ -65,11 +92,20 @@ export default function Forum() {
         <Container>
           <NewPost />
           <div className="posts">
-            {posts.map((p) => {
-              return <Post key={p.id} post={p.data} postId={p.id} />;
+            {posts.map((p, index) => {
+              if (posts.length === index + 1) {
+                return (
+                  <>
+                    <Post key={p.id} post={p.data} postId={p.id} />
+                    <div ref={lastPostElementRef} key={v4()}></div>
+                  </>
+                );
+              } else {
+                return <Post key={p.id} post={p.data} postId={p.id} />;
+              }
             })}
           </div>
-          <Button onClick={getPosts}>Load more</Button>
+          {/* <Button onClick={getPosts}>Load more</Button> */}
         </Container>
       </Container>
     </Box>

@@ -17,6 +17,7 @@ import SubjectPage from "./SubjectPage";
 import Chat from "./Chat";
 import "../styles/styles.css";
 import Navbar from "./Navbar";
+import Messenger from "./Messenger";
 
 function App() {
   return (
@@ -61,6 +62,24 @@ function App() {
                 element={
                   <PrivateRoute>
                     <Chat />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/messenger/:id"
+                element={
+                  <PrivateRoute>
+                    <Messenger />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/messenger/:id/:id"
+                element={
+                  <PrivateRoute>
+                    <Messenger />
                   </PrivateRoute>
                 }
               />

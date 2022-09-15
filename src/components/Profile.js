@@ -5,7 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import Navbar from "./Navbar";
 import { db, storage } from "../firebase";
 import { ref, listAll, getDownloadURL } from "firebase/storage";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
 
 export default function Profile() {
   const { id } = useParams();
@@ -13,6 +13,13 @@ export default function Profile() {
   const [profilePicture, setProfilePicture] = useState({});
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+
+  const updateOnlineStatus = async (isOnline, email) => {
+    await updateDoc(doc(db, "users", `${email}`), {
+      isOnline: isOnline,
+    });
+    await deleteDoc(doc(db, "onlineUsers", `${email}`));
+  };
 
   // const location = useLocation();
 
@@ -22,7 +29,9 @@ export default function Profile() {
     setError("");
 
     try {
-      await logout();
+      const email = currentUser.email;
+      await logout(currentUser.email);
+      updateOnlineStatus(true, email);
       navigate("/login");
     } catch {
       setError("Failed to Log Out!");
@@ -62,7 +71,7 @@ export default function Profile() {
               </Link>
             ) : (
               <Link
-                to="message"
+                to={`/messenger/${currentUser.email}/${id}`}
                 state={{ sender: currentUser.email, recipient: id }}
                 className="btn btn-primary w-100 mt-3"
               >

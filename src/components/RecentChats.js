@@ -13,18 +13,24 @@ import { useAuth } from "../contexts/AuthContext";
 import { db } from "../firebase";
 import { Link } from "react-router-dom";
 
-function Rightbar() {
+function RecentChats() {
   const { currentUser } = useAuth();
+  const [activeChats, setActiveChats] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   useEffect(() => {
-    const getOnlineUsers = async () => {
-      const users = await getDocs(collection(db, "onlineUsers"));
-      setOnlineUsers(
-        users.docs.map((user) => ({ data: { ...user.data() }, id: user.id }))
+    const getChats = async () => {
+      const chats = await getDocs(
+        collection(db, "users", `${currentUser.email}`, "chats")
       );
+      setActiveChats(
+        chats.docs.map((chat) => ({ data: { ...chat.data() }, id: chat.id }))
+      );
+
+      const users = await getDocs(collection(db, "onlineUsers"));
+      setOnlineUsers(users.docs.map((user) => user.id));
     };
 
-    getOnlineUsers();
+    getChats();
   }, []);
 
   return (
@@ -32,18 +38,18 @@ function Rightbar() {
       <Box sx={{ position: "fixed" }}>
         <List>
           <ListItem>
-            <h5>Online Users</h5>
+            <h5>Recent chats</h5>
           </ListItem>
-          {onlineUsers.map((user) => {
-            return user.id !== currentUser.email ? (
+          {activeChats.map((chat) => {
+            return (
               <Link
-                key={user.id}
+                key={chat.data.chatter}
                 // to={`/profile/${chat.data.chatter}/message`}
-                to={`/profile/${user.id}`}
-                // state={{
-                //   sender: currentUser.email,
-                //   recipient: chat.data.chatter,
-                // }}
+                to={`/messenger/${currentUser.email}/${chat.data.chatter}`}
+                state={{
+                  sender: currentUser.email,
+                  recipient: chat.data.chatter,
+                }}
                 style={{ textDecoration: "none", color: "black" }}
               >
                 <ListItem sx={{ margin: "0", padding: "2px 3px" }}>
@@ -57,7 +63,7 @@ function Rightbar() {
                       justifyContent: "center",
                     }}
                   >
-                    {user.data.isOnline && (
+                    {chat.data.chatterPP && (
                       <Badge
                         overlap="circular"
                         anchorOrigin={{
@@ -65,20 +71,30 @@ function Rightbar() {
                           horizontal: "right",
                         }}
                         badgeContent={
-                          <div
-                            style={{
-                              width: "10px",
-                              height: "10px",
-                              borderRadius: "50%",
-                              backgroundColor: "green",
-                            }}
-                          ></div>
+                          onlineUsers.includes(chat.data.chatter) ? (
+                            <div
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                borderRadius: "50%",
+                                backgroundColor: "green",
+                              }}
+                            ></div>
+                          ) : (
+                            <div
+                              style={{
+                                width: "10px",
+                                height: "10px",
+                                borderRadius: "50%",
+                                backgroundColor: "red",
+                              }}
+                            ></div>
+                          )
                         }
                       >
                         <Avatar
                           sx={{ width: 34, height: 34 }}
-                          src={user.id}
-                          alt={user.id}
+                          src={chat.data.chatterPP}
                         />
                       </Badge>
                     )}
@@ -90,13 +106,11 @@ function Rightbar() {
                         overflow: "hidden",
                       }}
                     >
-                      {user.id}
+                      {chat.data.chatter}
                     </p>
                   </ListItemButton>
                 </ListItem>
               </Link>
-            ) : (
-              <div></div>
             );
           })}
         </List>
@@ -105,4 +119,4 @@ function Rightbar() {
   );
 }
 
-export default Rightbar;
+export default RecentChats;

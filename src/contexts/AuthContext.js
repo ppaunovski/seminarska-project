@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { auth, db } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 
 const AuthContext = React.createContext();
 
@@ -18,6 +18,10 @@ export function AuthProvider({ children }) {
         email: email,
         ppurl:
           "https://firebasestorage.googleapis.com/v0/b/social-app-6644b.appspot.com/o/Profile%20pictures%2Fdefault%2Favatar.jpeg?alt=media&token=e8e4f091-46c3-4f1a-a7da-6dbb2d32f829",
+        isOnline: true,
+      });
+      await setDoc(doc(db, "onlineUsers", `${email}`), {
+        isOnline: true,
       });
     };
     createUser(email);
@@ -28,7 +32,7 @@ export function AuthProvider({ children }) {
     return auth.signInWithEmailAndPassword(email, password);
   }
 
-  function logout() {
+  function logout(email) {
     return auth.signOut();
   }
 

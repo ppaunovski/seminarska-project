@@ -4,6 +4,7 @@ import Toast from "react-bootstrap/Toast";
 import ToastContainer from "react-bootstrap/ToastContainer";
 import { useAuth } from "../contexts/AuthContext";
 import Moment from "react-moment";
+import { Box } from "@mui/material";
 
 function Message({ message, sender, createdAt }) {
   const [position, setPosition] = useState("top-start");
@@ -46,33 +47,35 @@ function Message({ message, sender, createdAt }) {
 
   return (
     <>
-      <div style={style}>
-        <div className="msg_wrapper" style={style_wrapper}>
-          <h6>{sender}</h6>
-          <p
-            style={{
-              padding: "0 10px",
-              display: "inline-block",
-              textAlign: "left",
-              borderRadius: "5px",
-              overflowWrap: "anywhere",
-            }}
-          >
-            {message}
-          </p>
-          <br />
-          <small
-            style={{
-              display: "inline-block",
-              marginTop: "5px",
-              opacity: "0.8",
-              padding: "0 0 5px 5px",
-            }}
-          >
-            <Moment fromNow>{createdAt && createdAt.toDate()}</Moment>
-          </small>
+      <Box sx={{ padding: "0 5px" }}>
+        <div style={style}>
+          <div className="msg_wrapper" style={style_wrapper}>
+            <h6>{sender}</h6>
+            <p
+              style={{
+                padding: "0 10px",
+                display: "inline-block",
+                textAlign: "left",
+                borderRadius: "5px",
+                overflowWrap: "anywhere",
+              }}
+            >
+              {message}
+            </p>
+            <br />
+            <small
+              style={{
+                display: "inline-block",
+                marginTop: "5px",
+                opacity: "0.8",
+                padding: "0 0 5px 5px",
+              }}
+            >
+              <Moment fromNow>{createdAt && createdAt.toDate()}</Moment>
+            </small>
+          </div>
         </div>
-      </div>
+      </Box>
     </>
   );
 }

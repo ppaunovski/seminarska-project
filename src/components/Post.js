@@ -7,6 +7,7 @@ import {
   doc,
   setDoc,
   serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db, auth, storage } from "../firebase";
@@ -49,17 +50,24 @@ export default function Post(props) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [like, setLike] = useState(false);
-  const [likeID, setLikeID] = useState("");
-  const [likes, setLikes] = useState([]);
   const [showDelete, setShowDelete] = useState(false);
+  const [likeCount, setLikeCount] = useState("");
+  const [post, setPost] = useState();
 
-  const likesCollectionRef = collection(db, "likes");
   const commentsCollectionRef = collection(
     db,
     "posts",
     props.postId,
     "comments"
   );
+
+  useEffect(() => {
+    const getPost = async () => {
+      const p = await getDoc(doc(db, "posts", props.postId));
+      setLikeCount(p.data().likes);
+    };
+    getPost();
+  }, [likeCount]);
 
   const getComments = async () => {
     const data = await getDocs(commentsCollectionRef);
@@ -123,6 +131,29 @@ export default function Post(props) {
   //   }
   //   return count;
   // };
+
+  const toggleLike = async (email) => {
+    const post = await getDoc(doc(db, "posts", props.postId));
+    const likeArray = post.data().likeArray;
+    console.log(likeArray, "likeArray");
+    // If it has the email then post is already liked -> UNLIKE IT
+    let newLikeArray = [];
+    if (likeArray.includes(email)) {
+      // filtering the array and removing the like
+      newLikeArray = likeArray.filter((like) => like !== email);
+      setLike(false);
+      setLikeCount(newLikeArray.length);
+    } else {
+      setLike(true);
+      likeArray.push(email);
+      newLikeArray = likeArray;
+      setLikeCount(newLikeArray.length);
+    }
+    await updateDoc(doc(db, "posts", props.postId), {
+      likeArray: newLikeArray,
+      likes: newLikeArray.length,
+    });
+  };
 
   const [profilePicture, setProfilePicture] = useState({});
 
@@ -194,8 +225,12 @@ export default function Post(props) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="like">
-          <FavoriteIcon />
+        <span>{likeCount}</span>
+        <IconButton
+          aria-label="like"
+          onClick={() => toggleLike(auth.currentUser.email)}
+        >
+          <FavoriteIcon sx={like ? { color: "red" } : {}} />
         </IconButton>
         <IconButton
           aria-label="comment"
@@ -207,7 +242,10 @@ export default function Post(props) {
 
       {showComms && (
         <Box>
-          <CardActions disableSpacing>
+          <CardActions
+            disableSpacing
+            sx={{ display: "flex", justifyContent: "center" }}
+          >
             <TextField
               hiddenLabel
               id="filled-hidden-label-small"
@@ -215,6 +253,7 @@ export default function Post(props) {
               value={newComment}
               variant="filled"
               size="small"
+              sx={{ width: "90%" }}
               onChange={(event) => {
                 setNewComment(event.target.value);
               }}
