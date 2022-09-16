@@ -39,14 +39,13 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-export default function NewPost() {
+export default function NewPost({ setRefresh }) {
   const [post, setPost] = useState("");
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [fileUrl, setFileUrl] = useState("");
   const [fileId, setFileId] = useState("");
   const [hasImage, setHasImage] = useState(false);
-  const postsCollectionRef = collection(db, "posts");
 
   const [profilePicture, setProfilePicture] = useState({});
 
@@ -98,6 +97,8 @@ export default function NewPost() {
           hasImage: hasImage,
           imageUrl: fileUrl,
         });
+
+        setRefresh(true);
       }
     };
     postIt();

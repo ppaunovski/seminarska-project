@@ -25,9 +25,10 @@ export default function Forum() {
   const [nextQuery, setNextQuery] = useState({});
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [refresh, setRefresh] = useState(true);
 
   const getPosts = async () => {
-    console.log("getPosts called");
+    console.log("getPosts called", isFirst);
     setLoading(true);
     let q;
     if (isFirst) {
@@ -42,6 +43,7 @@ export default function Forum() {
     documentSnapshots.docs.map((doc) => {
       const data = doc.data();
       setPosts((prev) => [...prev, { data: data, id: doc.id }]);
+      console.log(data);
     });
 
     const lastVisible =
@@ -83,14 +85,25 @@ export default function Forum() {
   );
 
   useEffect(() => {
-    getPosts();
-  }, []);
+    console.log(refresh);
+    if (refresh === true) {
+      setPosts([]);
+      setIsFirst(true);
+    }
+  }, [refresh]);
+
+  useEffect(() => {
+    if (isFirst) {
+      getPosts();
+      setRefresh(false);
+    }
+  }, [isFirst]);
 
   return (
     <Box flex={3}>
       <Container>
         <Container>
-          <NewPost />
+          <NewPost setRefresh={setRefresh} />
           <div className="posts">
             {posts.map((p, index) => {
               if (posts.length === index + 1) {

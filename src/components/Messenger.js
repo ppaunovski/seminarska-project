@@ -8,7 +8,6 @@ import RecentChats from "./RecentChats";
 function Messenger() {
   const location = useLocation();
   const { sender, recipient } = location.state;
-
   return (
     <>
       <Navbar />

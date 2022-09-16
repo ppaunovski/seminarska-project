@@ -84,6 +84,7 @@ function Chat({ sender, recipient }) {
   };
 
   useEffect(() => {
+    setOrderedMsgs([]);
     getMess();
 
     const getPP = async () => {
@@ -129,6 +130,7 @@ function Chat({ sender, recipient }) {
     );
     setMessage("");
     setAddedNewMess(true);
+    setRefresh(true);
   };
 
   const observer = useRef();
@@ -189,7 +191,7 @@ function Chat({ sender, recipient }) {
           flexDirection: "column-reverse",
           justifyContent: "end",
           overflowY: "scroll",
-          height: "71.5vh",
+          height: "70.8vh",
           backgroundColor: "lightgray",
         }}
       >
