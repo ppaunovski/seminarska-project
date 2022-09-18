@@ -23,8 +23,9 @@ import UploadFile from "./UploadFile";
 
 function SubjectPage() {
   const { currentUser } = useAuth();
-  const location = useLocation();
-  const { subject } = location.state;
+
+  const pathname = window.location.pathname;
+  const subject = decodeURIComponent(pathname.slice(30));
 
   const [fileList, setFileList] = useState([]);
 
@@ -40,17 +41,16 @@ function SubjectPage() {
   }, []);
 
   return (
-    <>
+    <Box sx={{ overflow: "hidden" }}>
       <Navbar />
       <h1 style={{ textAlign: "center", margin: "30px", padding: "5px" }}>
         {subject}
       </h1>
       <Box>
         <Box
-          className="scrollbar"
           sx={{
             maxWidth: "500px",
-            maxHeight: "70vh",
+            maxHeight: "60vh",
             margin: "0 auto",
             overflowY: "scroll",
           }}
@@ -92,7 +92,7 @@ function SubjectPage() {
           <UploadFile modal={false} subject={subject} />
         </Box>
       </Box>
-    </>
+    </Box>
   );
 }
 

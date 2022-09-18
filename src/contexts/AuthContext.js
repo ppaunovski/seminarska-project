@@ -19,6 +19,7 @@ export function AuthProvider({ children }) {
         ppurl:
           "https://firebasestorage.googleapis.com/v0/b/social-app-6644b.appspot.com/o/Profile%20pictures%2Fdefault%2Favatar.jpeg?alt=media&token=e8e4f091-46c3-4f1a-a7da-6dbb2d32f829",
         isOnline: true,
+        likedPosts: [],
       });
       await setDoc(doc(db, "onlineUsers", `${email}`), {
         isOnline: true,

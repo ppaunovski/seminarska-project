@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 import { db, storage } from "../firebase";
 import { ref, listAll, getDownloadURL } from "firebase/storage";
 import { getDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { Avatar, Box } from "@mui/material";
 
 export default function Profile() {
   const { id } = useParams();
@@ -41,10 +42,8 @@ export default function Profile() {
   useEffect(() => {
     const getPP = async () => {
       const pp = await getDoc(doc(db, "users", `${id}`));
-      console.log(pp);
-      console.log(pp.data());
+
       setProfilePicture(pp.data());
-      console.log(profilePicture.ppurl);
     };
 
     getPP();
@@ -52,15 +51,29 @@ export default function Profile() {
 
   return (
     <>
-      <>
-        <Navbar></Navbar>
-        <Card className="profile_card">
+      <Navbar></Navbar>
+      <Box
+        sx={{
+          display: "grid",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "calc(100vh - 78px)",
+        }}
+      >
+        <Card
+          style={{
+            width: "400px",
+          }}
+        >
           <Card.Body>
             <h2 className="text-center mb-4">Profile</h2>
             {error && <Alert variant="danger">{error}</Alert>}
 
-            <div className="center">
-              <img className="profile_avatar" src={profilePicture.ppurl}></img>
+            <div style={{ display: "grid", justifyContent: "center" }}>
+              <Avatar
+                sx={{ height: "78px", width: "78px" }}
+                src={profilePicture.ppurl}
+              ></Avatar>
             </div>
 
             <strong>Email: </strong>
@@ -79,17 +92,19 @@ export default function Profile() {
               </Link>
             )}
           </Card.Body>
+          <Card.Footer>
+            {currentUser.email === id ? (
+              <div style={{ textAlign: "center" }}>
+                <Button variant="link" onClick={handleLogout}>
+                  Log Out
+                </Button>
+              </div>
+            ) : (
+              <></>
+            )}
+          </Card.Footer>
         </Card>
-        {currentUser.email === id ? (
-          <div className="profile_logout">
-            <Button variant="link" onClick={handleLogout}>
-              Log Out
-            </Button>
-          </div>
-        ) : (
-          <></>
-        )}
-      </>
+      </Box>
     </>
   );
 }

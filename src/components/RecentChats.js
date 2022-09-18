@@ -13,7 +13,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { db } from "../firebase";
 import { Link } from "react-router-dom";
 
-function RecentChats() {
+function RecentChats({ setRefresh }) {
   const { currentUser } = useAuth();
   const [activeChats, setActiveChats] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -51,6 +51,7 @@ function RecentChats() {
                   recipient: chat.data.chatter,
                 }}
                 style={{ textDecoration: "none", color: "black" }}
+                onClick={() => setRefresh(false)}
               >
                 <ListItem sx={{ margin: "0", padding: "2px 3px" }}>
                   <ListItemButton

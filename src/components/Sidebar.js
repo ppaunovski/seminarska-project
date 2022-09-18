@@ -19,7 +19,13 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 function Sidebar() {
   return (
-    <Box flex={1} p={1} sx={{ display: { xs: "none", sm: "block" } }}>
+    <Box
+      flex={1}
+      p={1}
+      sx={{
+        display: { xs: "none", sm: "block" },
+      }}
+    >
       <Box sx={{ position: "fixed" }}>
         <h5>Корисни линкови</h5>
         <List>

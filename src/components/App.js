@@ -25,9 +25,7 @@ function App() {
       // className="d-flex align-items-center justify-content-center"
       // style={{ minHeight: "100vh" }}
     >
-      <div
-      //className="w-100"
-      >
+      <div>
         <Router>
           <AuthProvider>
             <Routes>
@@ -100,23 +98,23 @@ function App() {
                   </PrivateRoute>
                 }
               />
-              <Route
+              {/* <Route
                 path="/semesters/semester1"
                 element={
                   <PrivateRoute>
                     <Semester />
                   </PrivateRoute>
                 }
-              />
+              /> */}
               <Route
-                path="/semesters/semester2"
+                path="/semesters/semester/:id"
                 element={
                   <PrivateRoute>
                     <Semester />
                   </PrivateRoute>
                 }
               />
-              <Route
+              {/* <Route
                 path="/semesters/semester3"
                 element={
                   <PrivateRoute>
@@ -163,17 +161,17 @@ function App() {
                     <Semester />
                   </PrivateRoute>
                 }
-              />
+              /> */}
 
               <Route
-                path={"/semesters/semester1/subject"}
+                path={"/semesters/semester/:id/subject/:id"}
                 element={
                   <PrivateRoute>
                     <SubjectPage />
                   </PrivateRoute>
                 }
               />
-              <Route
+              {/* <Route
                 path={"/semesters/semester2/subject"}
                 element={
                   <PrivateRoute>
@@ -228,7 +226,7 @@ function App() {
                     <SubjectPage />
                   </PrivateRoute>
                 }
-              />
+              /> */}
 
               <Route
                 path="/signup"

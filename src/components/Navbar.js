@@ -104,7 +104,7 @@ const Navbar = () => {
               exact
               to={`/`}
             >
-              Student's Pal
+              FINKI Student's Pal
             </Link>
           </Typography>
 
@@ -143,7 +143,6 @@ const Navbar = () => {
                 to={`/`}
               >
                 <MenuItem onClick={handleCloseNavMenu}>
-                  {/* <Typography textAlign="center">Forum</Typography> */}
                   <ListItemIcon>
                     <ForumIcon fontSize="small" />
                   </ListItemIcon>
@@ -163,7 +162,7 @@ const Navbar = () => {
               </Link>
             </Menu>
           </Box>
-          {/* <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} /> */}
+
           <Typography
             variant="h5"
             noWrap
@@ -180,39 +179,40 @@ const Navbar = () => {
               textDecoration: "none",
             }}
           >
+            {/* MINIMISED */}
             <Link
               style={{ textDecoration: "none", color: "white" }}
               exact
               to={`/`}
             >
-              Student's Pal
+              FINKI Student's Pal
             </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Button
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: "white", display: "block" }}
+            <Link
+              style={{ textDecoration: "none", color: "white" }}
+              exact
+              to={`/`}
             >
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                exact
-                to={`/`}
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: "white", display: "block" }}
               >
                 Forum
-              </Link>
-            </Button>
+              </Button>
+            </Link>
 
-            <Button
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: "white", display: "block" }}
+            <Link
+              style={{ textDecoration: "none", color: "white" }}
+              to={`/semesters`}
             >
-              <Link
-                style={{ textDecoration: "none", color: "white" }}
-                to={`/semesters`}
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: "white", display: "block" }}
               >
                 Semesters
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

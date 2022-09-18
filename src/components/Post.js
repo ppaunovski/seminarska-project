@@ -53,6 +53,7 @@ export default function Post(props) {
   const [showDelete, setShowDelete] = useState(false);
   const [likeCount, setLikeCount] = useState("");
   const [post, setPost] = useState();
+  const [alreadyLikedPosts, setAlreadyLikedPosts] = useState([]);
 
   const commentsCollectionRef = collection(
     db,
@@ -134,36 +135,45 @@ export default function Post(props) {
 
   const toggleLike = async (email) => {
     const post = await getDoc(doc(db, "posts", props.postId));
+    const user = await getDoc(doc(db, "users", auth.currentUser.email));
+    const likedPosts = user.data().likedPosts;
     const likeArray = post.data().likeArray;
-    console.log(likeArray, "likeArray");
     // If it has the email then post is already liked -> UNLIKE IT
     let newLikeArray = [];
+    let newLikedPosts = [];
     if (likeArray.includes(email)) {
       // filtering the array and removing the like
       newLikeArray = likeArray.filter((like) => like !== email);
       setLike(false);
       setLikeCount(newLikeArray.length);
+      newLikedPosts = likedPosts.filter((like) => like !== props.postId);
     } else {
       setLike(true);
       likeArray.push(email);
       newLikeArray = likeArray;
       setLikeCount(newLikeArray.length);
+      likedPosts.push(props.postId);
+      newLikedPosts = likedPosts;
     }
+    setAlreadyLikedPosts(newLikedPosts);
     await updateDoc(doc(db, "posts", props.postId), {
       likeArray: newLikeArray,
       likes: newLikeArray.length,
+    });
+    await updateDoc(doc(db, "users", auth.currentUser.email), {
+      likedPosts: newLikedPosts,
     });
   };
 
   const [profilePicture, setProfilePicture] = useState({});
 
   useEffect(() => {
-    const profilePicRef = ref(storage, `Profile pictures/${props.post.author}`);
-
     const getPP = async () => {
       const pp = await getDoc(doc(db, "users", `${props.post.author}`));
+      const user = await getDoc(doc(db, "users", auth.currentUser.email));
 
       setProfilePicture(pp.data());
+      setAlreadyLikedPosts(user.data().likedPosts);
     };
 
     getPP();
@@ -230,7 +240,13 @@ export default function Post(props) {
           aria-label="like"
           onClick={() => toggleLike(auth.currentUser.email)}
         >
-          <FavoriteIcon sx={like ? { color: "red" } : {}} />
+          <FavoriteIcon
+            sx={
+              alreadyLikedPosts.includes(props.postId) === true
+                ? { color: "red" }
+                : {}
+            }
+          />
         </IconButton>
         <IconButton
           aria-label="comment"

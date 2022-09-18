@@ -28,14 +28,12 @@ export default function Forum() {
   const [refresh, setRefresh] = useState(true);
 
   const getPosts = async () => {
-    console.log("getPosts called", isFirst);
     setLoading(true);
     let q;
     if (isFirst) {
       q = query(postsCollectionRef, orderBy("postedAt", "desc"), limit(5));
       setIsFirst(false);
     } else {
-      //console.log("next", nextQuery);
       q = nextQuery;
     }
 
@@ -43,12 +41,10 @@ export default function Forum() {
     documentSnapshots.docs.map((doc) => {
       const data = doc.data();
       setPosts((prev) => [...prev, { data: data, id: doc.id }]);
-      console.log(data);
     });
 
     const lastVisible =
       documentSnapshots.docs[documentSnapshots.docs.length - 1];
-    //console.log("last", lastVisible);
 
     if (lastVisible) {
       setHasMore(true);
@@ -74,18 +70,15 @@ export default function Forum() {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          console.log("Visible", node);
           getPosts();
         }
       });
       if (node) observer.current.observe(node);
-      console.log(node);
     },
     [loading, hasMore]
   );
 
   useEffect(() => {
-    console.log(refresh);
     if (refresh === true) {
       setPosts([]);
       setIsFirst(true);
@@ -100,7 +93,13 @@ export default function Forum() {
   }, [isFirst]);
 
   return (
-    <Box flex={3}>
+    <Box
+      flex={3}
+      sx={{
+        borderRight: "lightgray 2px solid",
+        borderLeft: "lightgray 2px solid",
+      }}
+    >
       <Container>
         <Container>
           <NewPost setRefresh={setRefresh} />
@@ -108,10 +107,10 @@ export default function Forum() {
             {posts.map((p, index) => {
               if (posts.length === index + 1) {
                 return (
-                  <>
-                    <Post key={p.id} post={p.data} postId={p.id} />
-                    <div ref={lastPostElementRef} key={v4()}></div>
-                  </>
+                  <Box key={p.id}>
+                    <Post post={p.data} postId={p.id} />
+                    <div ref={lastPostElementRef}></div>
+                  </Box>
                 );
               } else {
                 return <Post key={p.id} post={p.data} postId={p.id} />;

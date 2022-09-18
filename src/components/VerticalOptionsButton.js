@@ -116,9 +116,7 @@ function VerticalOptionsButton({
   const deleteComments = async () => {
     for (let i = 0; i <= comments.length; i++) {
       const id = comments.length + "";
-      console.log("before", doc(db, "posts", postId, "comments", id));
       await deleteDoc(doc(db, "posts", postId, "comments", id));
-      console.log("after", doc(db, "posts", postId, "comments", id));
     }
   };
   //
@@ -131,7 +129,6 @@ function VerticalOptionsButton({
 
   const handleDeleteOfComment = async () => {
     await deleteDoc(doc(db, "posts", postId, "comments", commentId));
-    console.log(commentId);
   };
 
   const handleDeleteOfFile = async () => {

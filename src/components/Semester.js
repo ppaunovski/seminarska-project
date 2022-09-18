@@ -27,8 +27,13 @@ import Navbar from "./Navbar";
 import AddIcon from "@mui/icons-material/Add";
 
 export default function Semester() {
-  const location = useLocation();
-  const { semester } = location;
+  // const location = useLocation();
+  // const { semester } = location;
+
+  //pathname = /semsters/semester/${which semester}
+  //pathname.slice(20) returns the number of the semester
+  const pathname = window.location.pathname;
+  const semester = pathname.slice(20, 21);
 
   const [sem, setSem] = useState("");
   const [semesters, setSemesters] = useState([]);
@@ -36,7 +41,7 @@ export default function Semester() {
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
-    setSem(location.state.semester);
+    setSem(semester);
   }, []);
 
   const semCollectionRef = collection(db, "semesters");
@@ -86,7 +91,7 @@ export default function Semester() {
         }}
       >
         <Typography
-          sx={{ mt: 4, mb: 2, textAlign: "center" }}
+          sx={{ mt: 5, mb: 2, textAlign: "center" }}
           variant="h4"
           component="div"
         >
@@ -99,7 +104,7 @@ export default function Semester() {
                 <Link
                   key={sem}
                   style={{ textDecoration: "none", color: "black" }}
-                  to={`/semesters/semester${sem}/subject`}
+                  to={`/semesters/semester/${sem}/subject/${s}`}
                   state={{ subject: s }}
                 >
                   <ListItem>

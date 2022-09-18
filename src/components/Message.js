@@ -4,9 +4,9 @@ import Toast from "react-bootstrap/Toast";
 import ToastContainer from "react-bootstrap/ToastContainer";
 import { useAuth } from "../contexts/AuthContext";
 import Moment from "react-moment";
-import { Box } from "@mui/material";
+import { Avatar, Box } from "@mui/material";
 
-function Message({ message, sender, createdAt }) {
+function Message({ message, sender, createdAt, senderPP, recipientPP }) {
   const [position, setPosition] = useState("top-start");
 
   const { currentUser } = useAuth();
@@ -29,7 +29,7 @@ function Message({ message, sender, createdAt }) {
   sender === currentUser.email
     ? (style_wrapper = {
         backgroundColor: "#0B5ED7",
-        marginTop: "5px",
+        //marginTop: "5px",
         padding: "0px 5px",
         color: "white",
         minWidth: "15vw",
@@ -38,7 +38,7 @@ function Message({ message, sender, createdAt }) {
       })
     : (style_wrapper = {
         backgroundColor: "#BBB",
-        marginTop: "5px",
+        // marginTop: "5px",
         padding: "0px 5px",
         minWidth: "15vw",
         maxWidth: "50vw",
@@ -47,7 +47,16 @@ function Message({ message, sender, createdAt }) {
 
   return (
     <>
-      <Box sx={{ padding: "0 5px" }}>
+      <Box
+        sx={{
+          padding: "0 5px",
+          margin: "5px 0",
+          display: "flex",
+          alignItems: "center",
+          gap: "5px",
+        }}
+      >
+        {sender !== currentUser.email && <Avatar src={recipientPP} />}
         <div style={style}>
           <div className="msg_wrapper" style={style_wrapper}>
             <h6>{sender}</h6>
@@ -75,6 +84,7 @@ function Message({ message, sender, createdAt }) {
             </small>
           </div>
         </div>
+        {sender === currentUser.email && <Avatar src={senderPP} />}
       </Box>
     </>
   );

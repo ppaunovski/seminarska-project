@@ -12,6 +12,7 @@ import { Prev } from "react-bootstrap/esm/PageItem";
 import { useAuth } from "../contexts/AuthContext";
 import { db } from "../firebase";
 import { Link } from "react-router-dom";
+import { v4 } from "uuid";
 
 function Rightbar() {
   const { currentUser } = useAuth();
@@ -20,7 +21,11 @@ function Rightbar() {
     const getOnlineUsers = async () => {
       const users = await getDocs(collection(db, "onlineUsers"));
       setOnlineUsers(
-        users.docs.map((user) => ({ data: { ...user.data() }, id: user.id }))
+        users.docs.map((user) => ({
+          data: { ...user.data() },
+          id: user.id,
+          key: user.id,
+        }))
       );
     };
 
@@ -28,7 +33,12 @@ function Rightbar() {
   }, []);
 
   return (
-    <Box flex={1} sx={{ display: { xs: "none", sm: "block" } }}>
+    <Box
+      flex={1}
+      sx={{
+        display: { xs: "none", sm: "block" },
+      }}
+    >
       <Box sx={{ position: "fixed" }}>
         <List>
           <ListItem>
@@ -96,7 +106,7 @@ function Rightbar() {
                 </ListItem>
               </Link>
             ) : (
-              <div></div>
+              <div key={v4()}></div>
             );
           })}
         </List>

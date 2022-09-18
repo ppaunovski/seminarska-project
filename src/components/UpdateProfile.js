@@ -63,7 +63,6 @@ function UpdateProfile() {
         setProfilePic(url);
       });
     });
-    console.log(profilePic);
 
     await updateDoc(userRef, {
       ppurl: profilePic,
@@ -83,8 +82,15 @@ function UpdateProfile() {
   return (
     <>
       <Navbar />
-      <div className="center_div">
-        <Card>
+      <div
+        style={{
+          display: "grid",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "calc(100vh - 78px)",
+        }}
+      >
+        <Card style={{ width: "400px" }}>
           <Card.Body>
             <h2 className="text-center mb-4">Update Profile</h2>
             {error && <Alert variant="danger">{error}</Alert>}
@@ -129,12 +135,15 @@ function UpdateProfile() {
               </Button>
             </Form>
           </Card.Body>
+          <Card.Footer>
+            <Link
+              to={`/profile/${currentUser.email}`}
+              state={{ profile: currentUser.email }}
+            >
+              <p style={{ textAlign: "center" }}>Cancel</p>
+            </Link>
+          </Card.Footer>
         </Card>
-      </div>
-      <div className="w-100 text-center mt-2">
-        <Link to="/profile" state={{ profile: currentUser.email }}>
-          Cancel
-        </Link>
       </div>
     </>
   );

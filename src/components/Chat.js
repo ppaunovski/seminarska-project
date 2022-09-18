@@ -23,9 +23,10 @@ import { db } from "../firebase";
 import { useAuth } from "../contexts/AuthContext";
 import { Avatar, Box, Button, TextField } from "@mui/material";
 import { v4 } from "uuid";
+import CustomizedMenus from "./CustomizedMenus";
 //
 
-function Chat({ sender, recipient }) {
+function Chat({ sender, recipient, setReload }) {
   const [message, setMessage] = useState("");
   const [orderedMsgs, setOrderedMsgs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -33,8 +34,9 @@ function Chat({ sender, recipient }) {
   const [isFirst, setIsFirst] = useState(true);
   const [nextQuery, setNextQuery] = useState({});
   const [addedNewMess, setAddedNewMess] = useState(false);
-  const [profilePicture, setProfilePicture] = useState({});
-  const [refresh, setRefresh] = useState(false);
+  const [recipientPP, setRecipientPP] = useState({});
+  const [refresh, setRefresh] = useState(true);
+  const [senderPP, setSenderPP] = useState({});
   const scroll = useRef();
 
   const { currentUser } = useAuth();
@@ -45,7 +47,6 @@ function Chat({ sender, recipient }) {
   const messagesCollectionRef = collection(db, "messages", id, "chat");
 
   const getMess = async () => {
-    console.log("getMess called");
     setLoading(true);
 
     let q;
@@ -84,23 +85,24 @@ function Chat({ sender, recipient }) {
   };
 
   useEffect(() => {
-    setOrderedMsgs([]);
-    getMess();
+    if (refresh) {
+      setOrderedMsgs([]);
+      getMess();
 
-    const getPP = async () => {
-      const pp = await getDoc(doc(db, "users", `${recipient}`));
-      setProfilePicture(pp.data());
-    };
+      const getPP = async () => {
+        const ppRecipient = await getDoc(doc(db, "users", `${recipient}`));
+        setRecipientPP(ppRecipient.data());
+        const ppSender = await getDoc(doc(db, "users", `${sender}`));
+        setSenderPP(ppSender);
+      };
 
-    getPP();
+      getPP();
+      setRefresh(false);
+    }
   }, [refresh]);
 
   const handleSend = async (e) => {
     e.preventDefault();
-
-    const currentUserPP = await getDoc(
-      doc(db, "users", `${currentUser.email}`)
-    );
 
     await addDoc(messagesCollectionRef, {
       message: message,
@@ -111,9 +113,7 @@ function Chat({ sender, recipient }) {
     await setDoc(doc(db, "users", `${currentUser.email}`, "chats", id), {
       chatter: currentUser.email === sender ? recipient : sender,
       chatterPP:
-        currentUser.email === sender
-          ? profilePicture.ppurl
-          : currentUserPP.data().ppurl,
+        currentUser.email === sender ? recipientPP.ppurl : senderPP.ppurl,
     });
     await setDoc(
       doc(
@@ -125,7 +125,7 @@ function Chat({ sender, recipient }) {
       ),
       {
         chatter: currentUser.email,
-        chatterPP: currentUserPP.data().ppurl,
+        chatterPP: senderPP.ppurl,
       }
     );
     setMessage("");
@@ -140,12 +140,10 @@ function Chat({ sender, recipient }) {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          console.log("Visible", node);
           getMess();
         }
       });
       if (node) observer.current.observe(node);
-      console.log(node);
     },
     [loading, hasMore]
   );
@@ -156,11 +154,19 @@ function Chat({ sender, recipient }) {
         sx={{
           backgroundColor: "gray",
           height: "10vh",
-          display: "grid",
+          display: "flex",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
+        <Box
+          sx={{
+            visibility: { xs: "visable", sm: "hidden" },
+            paddingLeft: "15px",
+          }}
+        >
+          <CustomizedMenus setReload={setReload} />
+        </Box>
         <Box
           sx={{
             display: "flex",
@@ -169,10 +175,19 @@ function Chat({ sender, recipient }) {
             gap: "7px",
           }}
         >
-          <Avatar src={profilePicture.ppurl} />
+          <Avatar src={recipientPP.ppurl} />
           <h3>{recipient}</h3>
         </Box>
+        <Box
+          sx={{
+            display: { xs: "block", sm: "none" },
+            visibility: "hidden",
+          }}
+        >
+          XD
+        </Box>
       </Box>
+
       {/* <Box
         sx={{
           overflow: "auto",
@@ -205,6 +220,8 @@ function Chat({ sender, recipient }) {
                     message={m.data.message}
                     sender={m.data.sender}
                     createdAt={m.data.createdAt}
+                    recipientPP={recipientPP.ppurl}
+                    senderPP={senderPP.ppurl}
                   />
                   <div ref={lastMessElementRef} key={v4()}></div>
                 </>
@@ -216,6 +233,8 @@ function Chat({ sender, recipient }) {
                   message={m.data.message}
                   sender={m.data.sender}
                   createdAt={m.data.createdAt}
+                  recipientPP={recipientPP.ppurl}
+                  senderPP={senderPP.ppurl}
                 />
               );
             }

@@ -24,7 +24,6 @@ export default function Semesters() {
       setSemesters(
         data.docs.map((doc) => ({ data: { ...doc.data() }, id: doc.id }))
       );
-      console.log(semesters);
     };
 
     getSub();
@@ -35,7 +34,7 @@ export default function Semesters() {
   };
 
   return (
-    <div className="semesters_body_wrap">
+    <>
       <Navbar />
 
       <Box
@@ -45,7 +44,7 @@ export default function Semesters() {
         }}
       >
         <Typography
-          sx={{ Семестарmt: 4, mb: 2, textAlign: "center" }}
+          sx={{ mt: 4, mb: 2, textAlign: "center" }}
           variant="h4"
           component="div"
         >
@@ -56,7 +55,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/semesters/semester1"
+            to="/semesters/semester/1"
             state={{
               semester: 1,
             }}
@@ -70,7 +69,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/semesters/semester2"
+            to="/semesters/semester/2"
             state={{
               semester: 2,
             }}
@@ -84,7 +83,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/semesters/semester3"
+            to="/semesters/semester/3"
             state={{
               semester: 3,
             }}
@@ -98,7 +97,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/semesters/semester4"
+            to="/semesters/semester/4"
             state={{
               semester: 4,
             }}
@@ -112,7 +111,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/semesters/semester5"
+            to="/semesters/semester/5"
             state={{
               semester: 5,
             }}
@@ -126,7 +125,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/semesters/semester6"
+            to="/semesters/semester/6"
             state={{
               semester: 6,
             }}
@@ -140,7 +139,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/semesters/semester7"
+            to="/semesters/semester/7"
             state={{
               semester: 7,
             }}
@@ -154,7 +153,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/semesters/semester8"
+            to="/semesters/semester/8"
             state={{
               semester: 8,
             }}
@@ -168,6 +167,6 @@ export default function Semesters() {
           <Divider />
         </List>
       </Box>
-    </div>
+    </>
   );
 }
