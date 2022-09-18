@@ -31,7 +31,7 @@ function App() {
             <Routes>
               <Route
                 exact
-                path="/"
+                path="/seminarska-project"
                 element={
                   <PrivateRoute>
                     <Dashboard />
