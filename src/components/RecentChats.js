@@ -45,7 +45,7 @@ function RecentChats({ setRefresh }) {
               <Link
                 key={chat.data.chatter}
                 // to={`/profile/${chat.data.chatter}/message`}
-                to={`/seminarska-project/messenger/${currentUser.email}/${chat.data.chatter}`}
+                to={`/messenger/${currentUser.email}/${chat.data.chatter}`}
                 state={{
                   sender: currentUser.email,
                   recipient: chat.data.chatter,

@@ -49,7 +49,7 @@ function Rightbar() {
               <Link
                 key={user.id}
                 // to={`/profile/${chat.data.chatter}/message`}
-                to={`/seminarska-project/profile/${user.id}`}
+                to={`/profile/${user.id}`}
                 // state={{
                 //   sender: currentUser.email,
                 //   recipient: chat.data.chatter,

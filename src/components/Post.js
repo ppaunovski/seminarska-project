@@ -209,7 +209,7 @@ export default function Post(props) {
         title={
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to={`/seminarska-project/profile/${props.post.author}`}
+            to={`/profile/${props.post.author}`}
           >
             {props.post.author}
           </Link>

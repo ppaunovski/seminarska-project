@@ -55,7 +55,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/seminarska-project/semesters/semester/1"
+            to="/semesters/semester/1"
             state={{
               semester: 1,
             }}
@@ -69,7 +69,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/seminarska-project/semesters/semester/2"
+            to="/semesters/semester/2"
             state={{
               semester: 2,
             }}
@@ -83,7 +83,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/seminarska-project/semesters/semester/3"
+            to="/semesters/semester/3"
             state={{
               semester: 3,
             }}
@@ -97,7 +97,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/seminarska-project/semesters/semester/4"
+            to="/semesters/semester/4"
             state={{
               semester: 4,
             }}
@@ -111,7 +111,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/seminarska-project/semesters/semester/5"
+            to="/semesters/semester/5"
             state={{
               semester: 5,
             }}
@@ -125,7 +125,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/seminarska-project/semesters/semester/6"
+            to="/semesters/semester/6"
             state={{
               semester: 6,
             }}
@@ -139,7 +139,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/seminarska-project/semesters/semester/7"
+            to="/semesters/semester/7"
             state={{
               semester: 7,
             }}
@@ -153,7 +153,7 @@ export default function Semesters() {
           <Divider />
           <Link
             style={{ textDecoration: "none", color: "black" }}
-            to="/seminarska-project/semesters/semester/8"
+            to="/semesters/semester/8"
             state={{
               semester: 8,
             }}

@@ -76,15 +76,12 @@ function Login() {
               </Button>
             </Form>
             <div className="w-100 text-center mt-3">
-              <Link to="/seminarska-project/forgot-password">
-                Forgot password?
-              </Link>
+              <Link to="/forgot-password">Forgot password?</Link>
             </div>
           </Card.Body>
           <Card.Footer>
             <div className="w-100 text-center ">
-              Need an account?{" "}
-              <Link to="/seminarska-project/signup">Sign Up</Link>
+              Need an account? <Link to="/signup">Sign Up</Link>
             </div>
           </Card.Footer>
         </Card>

@@ -79,15 +79,12 @@ export default function Profile() {
             <strong>Email: </strong>
             {id}
             {currentUser.email === id ? (
-              <Link
-                to="/seminarska-project/update-profile"
-                className="btn btn-primary w-100 mt-3"
-              >
+              <Link to="/update-profile" className="btn btn-primary w-100 mt-3">
                 Update Profile
               </Link>
             ) : (
               <Link
-                to={`/seminarska-project/messenger/${currentUser.email}/${id}`}
+                to={`/messenger/${currentUser.email}/${id}`}
                 state={{ sender: currentUser.email, recipient: id }}
                 className="btn btn-primary w-100 mt-3"
               >

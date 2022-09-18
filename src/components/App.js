@@ -26,12 +26,12 @@ function App() {
       // style={{ minHeight: "100vh" }}
     >
       <div>
-        <Router>
+        <Router basename="/seminarska-project">
           <AuthProvider>
             <Routes>
               <Route
                 exact
-                path="/seminarska-project"
+                path="/"
                 element={
                   <PrivateRoute>
                     <Dashboard />
@@ -39,7 +39,7 @@ function App() {
                 }
               />
               <Route
-                path="/seminarska-project/update-profile"
+                path="/update-profile"
                 element={
                   <PrivateRoute>
                     <UpdateProfile />
@@ -47,7 +47,7 @@ function App() {
                 }
               />
               <Route
-                path="/seminarska-project/profile/:id"
+                path="/profile/:id"
                 element={
                   <PrivateRoute>
                     <Profile />
@@ -56,7 +56,7 @@ function App() {
               />
 
               <Route
-                path="/seminarska-project/profile/:id/message"
+                path="/profile/:id/message"
                 element={
                   <PrivateRoute>
                     <Chat />
@@ -65,7 +65,7 @@ function App() {
               />
 
               <Route
-                path="/seminarska-project/messenger/:id"
+                path="/messenger/:id"
                 element={
                   <PrivateRoute>
                     <Messenger />
@@ -74,7 +74,7 @@ function App() {
               />
 
               <Route
-                path="/seminarska-project/messenger/:id/:id"
+                path="/messenger/:id/:id"
                 element={
                   <PrivateRoute>
                     <Messenger />
@@ -83,7 +83,7 @@ function App() {
               />
 
               <Route
-                path="/seminarska-project/forum"
+                path="/forum"
                 element={
                   <PrivateRoute>
                     <Forum />
@@ -91,7 +91,7 @@ function App() {
                 }
               />
               <Route
-                path="/seminarska-project/semesters"
+                path="/semesters"
                 element={
                   <PrivateRoute>
                     <Semesters />
@@ -107,7 +107,7 @@ function App() {
                 }
               /> */}
               <Route
-                path="/seminarska-project/semesters/semester/:id"
+                path="/semesters/semester/:id"
                 element={
                   <PrivateRoute>
                     <Semester />
@@ -164,7 +164,7 @@ function App() {
               /> */}
 
               <Route
-                path={"/seminarska-project/semesters/semester/:id/subject/:id"}
+                path={"/semesters/semester/:id/subject/:id"}
                 element={
                   <PrivateRoute>
                     <SubjectPage />
@@ -229,7 +229,7 @@ function App() {
               /> */}
 
               <Route
-                path="/seminarska-project/signup"
+                path="/signup"
                 element={
                   <LoggedInRoute>
                     <Signup />
@@ -237,7 +237,7 @@ function App() {
                 }
               />
               <Route
-                path="/seminarska-project/login"
+                path="/login"
                 element={
                   <LoggedInRoute>
                     <Login />
@@ -245,7 +245,7 @@ function App() {
                 }
               />
               <Route
-                path="/seminarska-project/forgot-password"
+                path="/forgot-password"
                 element={
                   <LoggedInRoute>
                     <ForgotPassword />

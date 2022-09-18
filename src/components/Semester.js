@@ -104,7 +104,7 @@ export default function Semester() {
                 <Link
                   key={sem}
                   style={{ textDecoration: "none", color: "black" }}
-                  to={`/seminarska-project/semesters/semester/${sem}/subject/${s}`}
+                  to={`/semesters/semester/${sem}/subject/${s}`}
                   state={{ subject: s }}
                 >
                   <ListItem>

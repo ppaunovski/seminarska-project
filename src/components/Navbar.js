@@ -101,7 +101,8 @@ const Navbar = () => {
           >
             <Link
               style={{ textDecoration: "none", color: "white" }}
-              to={`/seminarska-project`}
+              exact
+              to={`/`}
             >
               FINKI Student's Pal
             </Link>
@@ -138,7 +139,8 @@ const Navbar = () => {
             >
               <Link
                 style={{ textDecoration: "none", color: "black" }}
-                to={`/seminarska-project`}
+                exact
+                to={`/`}
               >
                 <MenuItem onClick={handleCloseNavMenu}>
                   <ListItemIcon>
@@ -149,7 +151,7 @@ const Navbar = () => {
               </Link>
               <Link
                 style={{ textDecoration: "none", color: "black" }}
-                to={`/seminarska-project/semesters`}
+                to={`/semesters`}
               >
                 <MenuItem onClick={handleCloseNavMenu}>
                   <ListItemIcon>
@@ -181,7 +183,7 @@ const Navbar = () => {
             <Link
               style={{ textDecoration: "none", color: "white" }}
               exact
-              to={`/seminarska-project`}
+              to={`/`}
             >
               FINKI Student's Pal
             </Link>
@@ -189,7 +191,8 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Link
               style={{ textDecoration: "none", color: "white" }}
-              to={`/seminarska-project`}
+              exact
+              to={`/`}
             >
               <Button
                 onClick={handleCloseNavMenu}
@@ -201,7 +204,7 @@ const Navbar = () => {
 
             <Link
               style={{ textDecoration: "none", color: "white" }}
-              to={`/seminarska-project/semesters`}
+              to={`/semesters`}
             >
               <Button
                 onClick={handleCloseNavMenu}
@@ -236,7 +239,7 @@ const Navbar = () => {
             >
               <Link
                 style={{ textDecoration: "none", color: "black" }}
-                to={`/seminarska-project/profile/${currentUser.email}`}
+                to={`/profile/${currentUser.email}`}
               >
                 <MenuItem onClick={handleCloseUserMenu}>
                   <ListItemIcon>
@@ -247,7 +250,7 @@ const Navbar = () => {
               </Link>
               <Link
                 style={{ textDecoration: "none", color: "black" }}
-                to={`/seminarska-project/messenger/${currentUser.email}`}
+                to={`/messenger/${currentUser.email}`}
                 state={{ sender: currentUser.email, recipient: null }}
               >
                 <MenuItem onClick={handleCloseUserMenu}>
