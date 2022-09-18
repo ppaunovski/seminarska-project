@@ -53,7 +53,7 @@ function Comment(props) {
       >
         <Link
           style={{ textDecoration: "none", color: "black" }}
-          to={`/profile/${props.comment.author}`}
+          to={`/seminarska-project/profile/${props.comment.author}`}
         >
           <Avatar
             alt={props.comment.author}
@@ -85,7 +85,7 @@ function Comment(props) {
             title={
               <Link
                 style={{ textDecoration: "none", color: "black" }}
-                to={`/profile/${props.comment.author}`}
+                to={`/seminarska-project/profile/${props.comment.author}`}
               >
                 <Typography variant="body2" color="text.primary">
                   {props.comment.author}

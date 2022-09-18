@@ -33,7 +33,7 @@ export default function Semester() {
   //pathname = /semsters/semester/${which semester}
   //pathname.slice(20) returns the number of the semester
   const pathname = window.location.pathname;
-  const semester = pathname.slice(20, 21);
+  const semester = pathname.slice(39, 40);
 
   const [sem, setSem] = useState("");
   const [semesters, setSemesters] = useState([]);
@@ -104,7 +104,7 @@ export default function Semester() {
                 <Link
                   key={sem}
                   style={{ textDecoration: "none", color: "black" }}
-                  to={`/semesters/semester/${sem}/subject/${s}`}
+                  to={`/seminarska-project/semesters/semester/${sem}/subject/${s}`}
                   state={{ subject: s }}
                 >
                   <ListItem>

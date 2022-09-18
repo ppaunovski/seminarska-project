@@ -25,7 +25,7 @@ function SubjectPage() {
   const { currentUser } = useAuth();
 
   const pathname = window.location.pathname;
-  const subject = decodeURIComponent(pathname.slice(30));
+  const subject = decodeURIComponent(pathname.slice(49));
 
   const [fileList, setFileList] = useState([]);
 

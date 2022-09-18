@@ -137,7 +137,7 @@ function UpdateProfile() {
           </Card.Body>
           <Card.Footer>
             <Link
-              to={`/profile/${currentUser.email}`}
+              to={`/seminarska-project/profile/${currentUser.email}`}
               state={{ profile: currentUser.email }}
             >
               <p style={{ textAlign: "center" }}>Cancel</p>

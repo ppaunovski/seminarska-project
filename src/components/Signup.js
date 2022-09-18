@@ -78,7 +78,8 @@ function Signup() {
           </Card.Body>
           <Card.Footer>
             <div className="w-100 text-center">
-              Already have an account? <Link to="/login">Log In</Link>
+              Already have an account?{" "}
+              <Link to="/seminarska-project/login">Log In</Link>
             </div>
           </Card.Footer>
         </Card>
