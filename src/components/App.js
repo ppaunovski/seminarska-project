@@ -39,7 +39,7 @@ function App() {
                 }
               />
               <Route
-                path="/update-profile"
+                path="/seminarska-project/update-profile"
                 element={
                   <PrivateRoute>
                     <UpdateProfile />
@@ -47,7 +47,7 @@ function App() {
                 }
               />
               <Route
-                path="/profile/:id"
+                path="/seminarska-project/profile/:id"
                 element={
                   <PrivateRoute>
                     <Profile />
@@ -56,7 +56,7 @@ function App() {
               />
 
               <Route
-                path="/profile/:id/message"
+                path="/seminarska-project/profile/:id/message"
                 element={
                   <PrivateRoute>
                     <Chat />
@@ -65,7 +65,7 @@ function App() {
               />
 
               <Route
-                path="/messenger/:id"
+                path="/seminarska-project/messenger/:id"
                 element={
                   <PrivateRoute>
                     <Messenger />
@@ -74,7 +74,7 @@ function App() {
               />
 
               <Route
-                path="/messenger/:id/:id"
+                path="/seminarska-project/messenger/:id/:id"
                 element={
                   <PrivateRoute>
                     <Messenger />
@@ -83,7 +83,7 @@ function App() {
               />
 
               <Route
-                path="/forum"
+                path="/seminarska-project/forum"
                 element={
                   <PrivateRoute>
                     <Forum />
@@ -91,7 +91,7 @@ function App() {
                 }
               />
               <Route
-                path="/semesters"
+                path="/seminarska-project/semesters"
                 element={
                   <PrivateRoute>
                     <Semesters />
@@ -107,7 +107,7 @@ function App() {
                 }
               /> */}
               <Route
-                path="/semesters/semester/:id"
+                path="/seminarska-project/semesters/semester/:id"
                 element={
                   <PrivateRoute>
                     <Semester />
@@ -164,7 +164,7 @@ function App() {
               /> */}
 
               <Route
-                path={"/semesters/semester/:id/subject/:id"}
+                path={"/seminarska-project/semesters/semester/:id/subject/:id"}
                 element={
                   <PrivateRoute>
                     <SubjectPage />
@@ -229,7 +229,7 @@ function App() {
               /> */}
 
               <Route
-                path="/signup"
+                path="/seminarska-project/signup"
                 element={
                   <LoggedInRoute>
                     <Signup />
@@ -237,7 +237,7 @@ function App() {
                 }
               />
               <Route
-                path="/login"
+                path="/seminarska-project/login"
                 element={
                   <LoggedInRoute>
                     <Login />
@@ -245,7 +245,7 @@ function App() {
                 }
               />
               <Route
-                path="/forgot-password"
+                path="/seminarska-project/forgot-password"
                 element={
                   <LoggedInRoute>
                     <ForgotPassword />
