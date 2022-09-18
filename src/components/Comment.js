@@ -45,7 +45,7 @@ function Comment(props) {
       <Box
         sx={{
           display: "flex",
-          gap: "5px",
+          gap: "20px",
           alignItems: "center",
           margin: "0 0 7.5px 0",
           justifyContent: "center",
