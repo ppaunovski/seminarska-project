@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "89331ab5eaceb6c7ae8b",
+    "revision": "49a797410f7a7611cc90",
     "url": "/seminarska-project/static/css/main.a7e59400.chunk.css"
   },
   {
-    "revision": "89331ab5eaceb6c7ae8b",
-    "url": "/seminarska-project/static/js/main.89331ab5.chunk.js"
+    "revision": "49a797410f7a7611cc90",
+    "url": "/seminarska-project/static/js/main.49a79741.chunk.js"
   },
   {
     "revision": "28b8e9e42cf16559ecdf",
@@ -24,7 +24,7 @@ self.__precacheManifest = [
     "url": "/seminarska-project/static/js/runtime~main.2c4a377d.js"
   },
   {
-    "revision": "01e846d9ba85abaee10d0c2fc244c275",
+    "revision": "ac9af9ffddf96a32aab0d4050863fe92",
     "url": "/seminarska-project/index.html"
   }
 ];

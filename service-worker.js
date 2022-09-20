@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/seminarska-project/precache-manifest.b8282d95aa92902816a07102287505b9.js"
+  "/seminarska-project/precache-manifest.ae237635480848148a6d74e787a8a398.js"
 );
 
 workbox.clientsClaim();
