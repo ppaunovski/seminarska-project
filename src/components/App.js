@@ -26,7 +26,7 @@ function App() {
       // style={{ minHeight: "100vh" }}
     >
       <div>
-        <Router basename="/seminarska-project">
+        <Router basename={`/${process.env.PUBLIC_URL}`}>
           <AuthProvider>
             <Routes>
               <Route
